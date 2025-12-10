@@ -26,7 +26,6 @@ import {
   Beaker,
   TestTube,
   ShieldCheck,
-  Certificate,
   Heart,
   TruckIcon as TruckIconNew,
   Globe
@@ -179,7 +178,7 @@ export default function QualityPage() {
     {
       name: "ISO 22000:2018",
       desc: "Food Safety Management System",
-      icon: Certificate,
+      icon: ShieldCheck,
       validity: "Valid through 2026"
     },
     {

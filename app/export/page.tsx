@@ -1,17 +1,18 @@
 "use client";
 
+import React from "react";
 import { useState } from "react";
 import Image from "next/image";
-import { 
-  Package, 
-  Globe, 
-  Truck, 
-  CheckCircle, 
-  Award, 
-  Star, 
-  TrendingUp, 
-  Users, 
-  Shield, 
+import {
+  Package,
+  Globe,
+  Truck,
+  CheckCircle,
+  Award,
+  Star,
+  TrendingUp,
+  Users,
+  Shield,
   FileText,
   Download,
   Calendar,
@@ -38,11 +39,15 @@ import {
   Zap
 } from "lucide-react";
 
+
+
 export default function ExportBusinessPage() {
+
+
+  const [quantity, setQuantity] = useState({});
   const [activeTab, setActiveTab] = useState("all");
   const [expandedProduct, setExpandedProduct] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [quantity, useState] = useState({});
 
   const categories = [
     { id: "dry-fruits", name: "Dry Fruits", count: 28, icon: "🥜", color: "from-amber-500 to-amber-700" },
@@ -272,7 +277,7 @@ export default function ExportBusinessPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white pt-[140px]">
-      
+
       {/* HERO SECTION */}
       <section className="relative bg-gradient-to-r from-emerald-900 via-emerald-800 to-amber-900 py-20">
         <div className="absolute inset-0 bg-black/20" />
@@ -287,7 +292,7 @@ export default function ExportBusinessPage() {
               <span className="text-amber-300"> Excellence</span>
             </h1>
             <p className="text-xl text-white/90 max-w-2xl mb-10">
-              Premium quality dry fruits, rice, spices, and food products for global markets. 
+              Premium quality dry fruits, rice, spices, and food products for global markets.
               Trusted by 500+ businesses worldwide.
             </p>
             <div className="flex flex-wrap gap-4">
@@ -332,17 +337,16 @@ export default function ExportBusinessPage() {
             Explore our premium range of export-quality products
           </p>
         </div>
-        
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`p-6 rounded-2xl transition-all duration-300 ${
-                selectedCategory === cat.id || selectedCategory === "all"
+              className={`p-6 rounded-2xl transition-all duration-300 ${selectedCategory === cat.id || selectedCategory === "all"
                   ? `bg-gradient-to-r ${cat.color} text-white scale-105`
                   : "bg-white text-gray-800 hover:bg-gray-50"
-              } shadow-lg border border-gray-100`}
+                } shadow-lg border border-gray-100`}
             >
               <div className="text-3xl mb-3">{cat.icon}</div>
               <div className="font-bold mb-1">{cat.name}</div>
@@ -366,11 +370,10 @@ export default function ExportBusinessPage() {
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`px-4 py-2 rounded-full font-medium capitalize ${
-                      activeTab === tab
+                    className={`px-4 py-2 rounded-full font-medium capitalize ${activeTab === tab
                         ? "bg-emerald-600 text-white"
                         : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
+                      }`}
                   >
                     {tab === "vip" ? "VIP" : tab}
                   </button>
@@ -393,13 +396,15 @@ export default function ExportBusinessPage() {
               </thead>
               <tbody>
                 {products
-                  .filter(p => 
-                    (selectedCategory === "all" || p.category === selectedCategory) &&
-                    (activeTab === "all" || p.type === activeTab)
+                  .filter(
+                    (p) =>
+                      (selectedCategory === "all" || p.category === selectedCategory) &&
+                      (activeTab === "all" || p.type === activeTab)
                   )
                   .map((product) => (
-                    <>
-                      <tr key={product.id} className="border-t border-gray-100 hover:bg-gray-50/50">
+                    <React.Fragment key={product.id}>
+                      {/* MAIN PRODUCT ROW */}
+                      <tr className="border-t border-gray-100 hover:bg-gray-50/50">
                         <td className="p-6">
                           <div className="flex items-center gap-4">
                             <div className="w-16 h-16 bg-gradient-to-br from-emerald-100 to-amber-100 rounded-xl flex items-center justify-center">
@@ -407,14 +412,16 @@ export default function ExportBusinessPage() {
                             </div>
                             <div>
                               <div className="font-bold text-gray-900">{product.name}</div>
+
                               <div className="text-sm text-gray-600 flex items-center gap-2 mt-1">
-                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                  product.type === "vip" 
-                                    ? "bg-purple-100 text-purple-700"
-                                    : product.type === "premium"
-                                    ? "bg-amber-100 text-amber-700"
-                                    : "bg-blue-100 text-blue-700"
-                                }`}>
+                                <span
+                                  className={`px-2 py-1 rounded-full text-xs font-medium ${product.type === "vip"
+                                      ? "bg-purple-100 text-purple-700"
+                                      : product.type === "premium"
+                                        ? "bg-amber-100 text-amber-700"
+                                        : "bg-blue-100 text-blue-700"
+                                    }`}
+                                >
                                   {product.type.toUpperCase()}
                                 </span>
                                 <span className="text-gray-500">{product.category}</span>
@@ -422,33 +429,41 @@ export default function ExportBusinessPage() {
                             </div>
                           </div>
                         </td>
+
                         <td className="p-6">
                           <div className="flex items-center gap-2">
                             <Award className="w-4 h-4 text-amber-500" />
                             <span className="font-medium">{product.grade}</span>
                           </div>
                         </td>
+
                         <td className="p-6 font-medium">{product.moq}</td>
+
                         <td className="p-6">
                           <div className="font-bold text-emerald-700">{product.price}</div>
                           <div className="text-sm text-gray-600">{product.bulkPrice}</div>
                         </td>
+
                         <td className="p-6">
                           <div className="flex items-center gap-2">
                             <Globe className="w-4 h-4 text-blue-500" />
                             <span>{product.origin}</span>
                           </div>
                         </td>
+
                         <td className="p-6">
-                          <div className="flex gap-2">
+                          <div className="flex items-center gap-2">
                             <button
                               onClick={() => handleQuoteRequest(product.id)}
                               className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white rounded-lg font-medium hover:opacity-90 transition-all"
                             >
                               Get Quote
                             </button>
+
                             <button
-                              onClick={() => toggleProductDetails(product.id.toString())}
+                              onClick={() =>
+                                toggleProductDetails(product.id.toString())
+                              }
                               className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
                             >
                               {expandedProduct === product.id.toString() ? (
@@ -460,52 +475,73 @@ export default function ExportBusinessPage() {
                           </div>
                         </td>
                       </tr>
+
+                      {/* EXPANDED DETAILS ROW */}
                       {expandedProduct === product.id.toString() && (
                         <tr className="bg-gradient-to-r from-gray-50/50 to-white">
                           <td colSpan={6} className="p-6">
                             <div className="grid md:grid-cols-2 gap-8">
+                              {/* LEFT SIDE */}
                               <div>
                                 <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
                                   <FileText className="w-5 h-5" />
                                   Product Specifications
                                 </h4>
+
                                 <ul className="space-y-2">
                                   {product.specs.map((spec, idx) => (
-                                    <li key={idx} className="flex items-center gap-2 text-gray-700">
+                                    <li
+                                      key={idx}
+                                      className="flex items-center gap-2 text-gray-700"
+                                    >
                                       <CheckCircle className="w-4 h-4 text-emerald-500" />
                                       {spec}
                                     </li>
                                   ))}
                                 </ul>
+
                                 <div className="mt-6">
-                                  <h4 className="font-bold text-gray-900 mb-3">Certifications</h4>
+                                  <h4 className="font-bold text-gray-900 mb-3">
+                                    Certifications
+                                  </h4>
                                   <div className="flex flex-wrap gap-2">
                                     {product.certifications.map((cert, idx) => (
-                                      <span key={idx} className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm">
+                                      <span
+                                        key={idx}
+                                        className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm"
+                                      >
                                         {cert}
                                       </span>
                                     ))}
                                   </div>
                                 </div>
                               </div>
+
+                              {/* RIGHT SIDE */}
                               <div>
                                 <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
                                   <Package className="w-5 h-5" />
                                   Packaging & Details
                                 </h4>
+
                                 <div className="space-y-4">
                                   <div>
                                     <div className="text-sm text-gray-600">Packaging</div>
                                     <div className="font-medium">{product.packaging}</div>
                                   </div>
+
                                   <div>
                                     <div className="text-sm text-gray-600">Shelf Life</div>
                                     <div className="font-medium">{product.shelfLife}</div>
                                   </div>
+
                                   <div>
                                     <div className="text-sm text-gray-600">Description</div>
-                                    <div className="text-gray-700 mt-1">{product.description}</div>
+                                    <div className="text-gray-700 mt-1">
+                                      {product.description}
+                                    </div>
                                   </div>
+
                                   <button className="mt-4 w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg font-semibold hover:opacity-90 transition-all">
                                     <ShoppingCart className="inline w-5 h-5 mr-2" />
                                     Add to Inquiry List
@@ -516,9 +552,10 @@ export default function ExportBusinessPage() {
                           </td>
                         </tr>
                       )}
-                    </>
+                    </React.Fragment>
                   ))}
               </tbody>
+
             </table>
           </div>
         </div>
@@ -533,10 +570,10 @@ export default function ExportBusinessPage() {
               Seamless export experience from inquiry to delivery
             </p>
           </div>
-          
+
           <div className="relative">
             <div className="absolute left-0 right-0 top-1/2 h-0.5 bg-gradient-to-r from-emerald-400 to-amber-400 transform -translate-y-1/2 hidden lg:block" />
-            
+
             <div className="grid lg:grid-cols-6 gap-8">
               {exportProcess.map((step) => (
                 <div key={step.step} className="relative">
@@ -569,17 +606,16 @@ export default function ExportBusinessPage() {
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Global Export Network</h2>
           <p className="text-gray-600 text-lg">Serving clients across 35+ countries</p>
         </div>
-        
+
         <div className="grid md:grid-cols-4 gap-6 mb-12">
           {exportCountries.map((country) => (
             <div key={country.country} className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all hover:-translate-y-1">
               <div className="flex items-center justify-between mb-4">
                 <div className="text-2xl">{country.flag}</div>
-                <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-                  country.growth.startsWith('+') 
+                <div className={`px-3 py-1 rounded-full text-sm font-medium ${country.growth.startsWith('+')
                     ? 'bg-green-100 text-green-700'
                     : 'bg-red-100 text-red-700'
-                }`}>
+                  }`}>
                   {country.growth}
                 </div>
               </div>
@@ -598,7 +634,7 @@ export default function ExportBusinessPage() {
             <h2 className="text-4xl font-bold text-gray-900 mb-4">Certifications & Compliance</h2>
             <p className="text-gray-600 text-lg">Meeting global quality and safety standards</p>
           </div>
-          
+
           <div className="grid md:grid-cols-4 gap-6">
             {certificationsList.map((cert) => (
               <div key={cert.name} className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
@@ -619,7 +655,7 @@ export default function ExportBusinessPage() {
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Partner With Us?</h2>
           <p className="text-gray-600 text-lg">Premium benefits for our business partners</p>
         </div>
-        
+
         <div className="grid md:grid-cols-3 gap-8">
           {[
             {
@@ -681,7 +717,7 @@ export default function ExportBusinessPage() {
                   Start Your Export Journey Today
                 </h2>
                 <p className="text-white/90 text-lg mb-8">
-                  Join 5000+ satisfied business clients worldwide. Get customized quotes, 
+                  Join 5000+ satisfied business clients worldwide. Get customized quotes,
                   samples, and expert guidance for your export requirements.
                 </p>
                 <div className="space-y-4">
@@ -740,7 +776,7 @@ export default function ExportBusinessPage() {
             <div className="text-2xl font-bold mb-2">+91 98765 43210</div>
             <p className="opacity-90">24/7 dedicated export helpline</p>
           </div>
-          
+
           <div className="bg-gradient-to-br from-amber-600 to-amber-800 rounded-2xl p-8 text-white">
             <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6">
               <Mail className="w-8 h-8" />
@@ -749,7 +785,7 @@ export default function ExportBusinessPage() {
             <div className="text-2xl font-bold mb-2">export@dryfruithouse.com</div>
             <p className="opacity-90">Response within 2 hours</p>
           </div>
-          
+
           <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl p-8 text-white">
             <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6">
               <MapPin className="w-8 h-8" />
