@@ -5,19 +5,19 @@ import { Search, Heart, ShoppingBag, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navLinks = [
-  { name: "Home", href: "/" },
+  { name: "Home", href: "/home" },
   { name: "About", href: "/about" },
   { name: "Product", href: "/product" },
   { name: "Quality", href: "/quality" },
   { name: "Export", href: "/export" },
   { name: "Contact", href: "/contact" },
-];
+]; 
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="fixed w-full z-40 bg-green-600 text-white shadow-lg" style={{ top: "65px" }}>
+    <header className="fixed w-full z-40 bg-gradient-to-l from-green-700 to-gray-800 text-white shadow-lg" style={{ top: "65px" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <a href="/" className="text-2xl font-bold tracking-widest">

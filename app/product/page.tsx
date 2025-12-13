@@ -2,14 +2,14 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { 
-  ShoppingBag, 
-  Heart, 
-  Share2, 
-  Star, 
-  Truck, 
-  Shield, 
-  RefreshCw, 
+import {
+  ShoppingBag,
+  Heart,
+  Share2,
+  Star,
+  Truck,
+  Shield,
+  RefreshCw,
   Package,
   ChevronRight,
   Minus,
@@ -27,7 +27,7 @@ import {
   Zap,
   Droplets,
   Scale,
-  Tag
+  Tag,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -38,6 +38,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import productImg1 from "./../../public/images/product_home_1.jpg";
+import productImg2 from "./../../public/images/product_home_2.webp";
+import productImg3 from "./../../public/images/product_home_3.webp";
+import productImg4 from "./../../public/images/product_home_4.webp";
+// import productImg5 from "./../../public/images/product_home_5.png";
 
 export default function ProductsPage() {
   const [quantity, setQuantity] = useState(1);
@@ -68,23 +73,23 @@ export default function ProductsPage() {
     {
       id: "origin",
       title: "Origin",
-      options: ["California", "Kashmir", "Iran", "Afghanistan", "Australia"]
+      options: ["California", "Kashmir", "Iran", "Afghanistan", "Australia"],
     },
     {
       id: "certifications",
       title: "Certifications",
-      options: ["Organic", "Non-GMO", "USDA Certified", "ISO 22000"]
+      options: ["Organic", "Non-GMO", "USDA Certified", "ISO 22000"],
     },
     {
       id: "processing",
       title: "Processing",
-      options: ["Raw", "Roasted", "Salted", "Flavored"]
+      options: ["Raw", "Roasted", "Salted", "Flavored"],
     },
     {
       id: "benefits",
       title: "Health Benefits",
-      options: ["High Protein", "Low Carb", "Heart Health", "Brain Boost"]
-    }
+      options: ["High Protein", "Low Carb", "Heart Health", "Brain Boost"],
+    },
   ];
 
   // Featured product
@@ -97,34 +102,35 @@ export default function ProductsPage() {
     price: 899,
     originalPrice: 1199,
     discount: 25,
-    description: "Premium California almonds, known for their exceptional quality and rich nutritional profile. These almonds are non-GMO, pesticide-free, and packed with essential nutrients.",
+    description:
+      "Premium California almonds, known for their exceptional quality and rich nutritional profile. These almonds are non-GMO, pesticide-free, and packed with essential nutrients.",
     features: [
       "Rich in Vitamin E & Magnesium",
       "Supports heart health",
       "High protein content",
       "Gluten-free & vegan",
-      "No artificial preservatives"
+      "No artificial preservatives",
     ],
     variants: [
       { id: "250g", price: 499, label: "250g" },
       { id: "500g", price: 899, label: "500g (Most Popular)" },
       { id: "1kg", price: 1599, label: "1kg (Best Value)" },
-      { id: "2kg", price: 2899, label: "2kg Family Pack" }
+      { id: "2kg", price: 2899, label: "2kg Family Pack" },
     ],
     images: [
       "/products/almonds-1.jpg",
       "/products/almonds-2.jpg",
       "/products/almonds-3.jpg",
-      "/products/almonds-4.jpg"
+      "/products/almonds-4.jpg",
     ],
     nutrition: {
       calories: 579,
       protein: "21g",
       carbs: "22g",
       fiber: "13g",
-      fat: "50g"
+      fat: "50g",
     },
-    tags: ["Premium", "Bestseller", "Organic", "High Protein"]
+    tags: ["Premium", "Bestseller", "Organic", "High Protein"],
   };
 
   // Sample products
@@ -142,7 +148,7 @@ export default function ProductsPage() {
       tags: ["Premium", "Fresh", "Brain Food"],
       origin: "Kashmir",
       stock: 42,
-      isNew: true
+      isNew: true,
     },
     {
       id: "2",
@@ -157,7 +163,7 @@ export default function ProductsPage() {
       tags: ["Premium", "Jumbo", "Buttery"],
       origin: "Vietnam",
       stock: 28,
-      isNew: false
+      isNew: false,
     },
     {
       id: "3",
@@ -172,7 +178,7 @@ export default function ProductsPage() {
       tags: ["Premium", "Roasted", "Salty"],
       origin: "Iran",
       stock: 35,
-      isNew: true
+      isNew: true,
     },
     {
       id: "4",
@@ -187,7 +193,7 @@ export default function ProductsPage() {
       tags: ["Organic", "Sweet", "Energy"],
       origin: "Saudi Arabia",
       stock: 56,
-      isNew: false
+      isNew: false,
     },
     {
       id: "5",
@@ -202,7 +208,7 @@ export default function ProductsPage() {
       tags: ["Natural", "Sweet", "Antioxidants"],
       origin: "Afghanistan",
       stock: 89,
-      isNew: true
+      isNew: true,
     },
     {
       id: "6",
@@ -217,7 +223,7 @@ export default function ProductsPage() {
       tags: ["Premium", "Gift", "Assorted"],
       origin: "Various",
       stock: 18,
-      isNew: false
+      isNew: false,
     },
     {
       id: "7",
@@ -232,7 +238,7 @@ export default function ProductsPage() {
       tags: ["Selenium Rich", "Premium", "Rare"],
       origin: "Brazil",
       stock: 24,
-      isNew: true
+      isNew: true,
     },
     {
       id: "8",
@@ -247,7 +253,7 @@ export default function ProductsPage() {
       tags: ["Premium", "Gourmet", "Italian"],
       origin: "Mediterranean",
       stock: 15,
-      isNew: false
+      isNew: false,
     },
     {
       id: "9",
@@ -262,7 +268,7 @@ export default function ProductsPage() {
       tags: ["Premium", "Buttery", "Luxury"],
       origin: "Australia",
       stock: 12,
-      isNew: true
+      isNew: true,
     },
     {
       id: "10",
@@ -277,7 +283,7 @@ export default function ProductsPage() {
       tags: ["Premium", "Chocolate", "Nutty"],
       origin: "Turkey",
       stock: 32,
-      isNew: false
+      isNew: false,
     },
     {
       id: "11",
@@ -292,7 +298,7 @@ export default function ProductsPage() {
       tags: ["Crunchy", "Affordable", "Protein"],
       origin: "India",
       stock: 156,
-      isNew: false
+      isNew: false,
     },
     {
       id: "12",
@@ -307,8 +313,8 @@ export default function ProductsPage() {
       tags: ["Healthy", "Snack", "Vitamin E"],
       origin: "USA",
       stock: 78,
-      isNew: true
-    }
+      isNew: true,
+    },
   ];
 
   // Related products
@@ -320,7 +326,7 @@ export default function ProductsPage() {
 
   const handleAddToWishlist = (productId: string) => {
     if (wishlist.includes(productId)) {
-      setWishlist(wishlist.filter(id => id !== productId));
+      setWishlist(wishlist.filter((id) => id !== productId));
     } else {
       setWishlist([...wishlist, productId]);
     }
@@ -334,8 +340,11 @@ export default function ProductsPage() {
     }
   };
 
-  const filteredProducts = products.filter(product => {
-    if (selectedCategory !== "all" && product.category.toLowerCase() !== selectedCategory.toLowerCase()) {
+  const filteredProducts = products.filter((product) => {
+    if (
+      selectedCategory !== "all" &&
+      product.category.toLowerCase() !== selectedCategory.toLowerCase()
+    ) {
       return false;
     }
     if (product.price < priceRange[0] || product.price > priceRange[1]) {
@@ -362,25 +371,82 @@ export default function ProductsPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-amber-50 to-white pt-[140px] pb-24">
-      
       {/* HERO BANNER */}
-      <section className="relative bg-gradient-to-r from-emerald-900 via-emerald-800 to-amber-900 py-16">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-300 text-white px-4 py-2 rounded-full mb-4">
+      <section className="relative bg-white py-20">
+        <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-14 items-center">
+          {/* LEFT — TEXT SECTION */}
+          <div className="max-w-xl">
+            <div className="inline-flex items-center gap-2 bg-green-700 text-white px-4 py-1.5 rounded-full mb-6">
               <Tag className="w-4 h-4" />
-              <span className="text-sm font-semibold">Premium Collection</span>
+              <span className="text-sm font-semibold tracking-wide">
+                Premium Food Products
+              </span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-              Premium Dry Fruits
-              <span className="text-amber-300"> Collection</span>
+
+            <h1 className="text-5xl md:text-6xl font-extrabold text-gray-800 leading-tight mb-4">
+              {/* High-Quality Rice, Daal */}
+              <span className="block text-green-700">
+                <span className="text-gray-600">High-Quality Rice,</span> Daal
+                and Premium Dry Fruits
+              </span>
             </h1>
-            <p className="text-xl text-white/90 max-w-2xl">
-              Discover our exquisite collection of premium dry fruits, carefully sourced and selected for their exceptional quality and taste.
+
+            <p className="text-xl text-gray-600 leading-relaxed">
+              We deliver top-grade rice, handpicked pulses, and the finest dry
+              fruits — sourced directly from trusted farms to ensure purity,
+              taste, and freshness in every pack.
             </p>
           </div>
+
+          {/* RIGHT — COLLAGE GRID */}
+          <div className="relative w-full mx-auto px-4">
+            {/* 4-Image Grid */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="rounded-xl overflow-hidden shadow-md">
+                <Image
+                  src={productImg1}
+                  alt="product_homeImage1"
+                  width={200} // width in px
+                  height={160} // height in px
+                  className="object-cover w-full h-full"
+                />
+              </div>
+
+              <div className="rounded-xl overflow-hidden shadow-md">
+                <Image
+                  src={productImg2}
+                  width={200}
+                  height={160}
+                  className="object-cover w-full h-full"
+                  alt="product_image2"
+                />
+              </div>
+
+              <div className="rounded-xl overflow-hidden shadow-md">
+                <Image
+                  src={productImg3}
+                  width={200}
+                  height={160}
+                  className="object-cover w-full h-full"
+                  alt="product_image3"
+                />
+              </div>
+
+              <div className="rounded-xl overflow-hidden shadow-md">
+                <Image
+                  src={productImg4}
+                  width={200}
+                  height={160}
+                  className="object-cover w-full h-full"
+                  alt="product_image4"
+                />
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-amber-50 to-transparent" />
+
+        {/* Bottom Divider */}
+        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gray-200"></div>
       </section>
 
       {/* BREADCRUMB & FILTER BAR */}
@@ -393,7 +459,7 @@ export default function ProductsPage() {
             <ChevronRight className="w-4 h-4 mx-2" />
             <span className="text-gray-500">All Products</span>
           </div>
-          
+
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <Filter className="w-5 h-5 text-gray-600" />
@@ -402,13 +468,21 @@ export default function ProductsPage() {
             <div className="flex border border-gray-300 rounded-lg overflow-hidden">
               <button
                 onClick={() => setViewMode("grid")}
-                className={`p-2 ${viewMode === "grid" ? "bg-emerald-100 text-emerald-700" : "bg-white text-gray-600"}`}
+                className={`p-2 ${
+                  viewMode === "grid"
+                    ? "bg-emerald-100 text-emerald-700"
+                    : "bg-white text-gray-600"
+                }`}
               >
                 <Grid className="w-5 h-5" />
               </button>
               <button
                 onClick={() => setViewMode("list")}
-                className={`p-2 ${viewMode === "list" ? "bg-emerald-100 text-emerald-700" : "bg-white text-gray-600"}`}
+                className={`p-2 ${
+                  viewMode === "list"
+                    ? "bg-emerald-100 text-emerald-700"
+                    : "bg-white text-gray-600"
+                }`}
               >
                 <List className="w-5 h-5" />
               </button>
@@ -437,7 +511,9 @@ export default function ProductsPage() {
             {/* Price Range */}
             <Card className="border border-gray-200">
               <CardContent className="p-6">
-                <h3 className="font-bold text-lg mb-4 text-gray-900">Price Range</h3>
+                <h3 className="font-bold text-lg mb-4 text-gray-900">
+                  Price Range
+                </h3>
                 <div className="space-y-4">
                   <Slider
                     defaultValue={[100, 5000]}
@@ -459,7 +535,9 @@ export default function ProductsPage() {
             {/* Categories */}
             <Card className="border border-gray-200">
               <CardContent className="p-6">
-                <h3 className="font-bold text-lg mb-4 text-gray-900">Categories</h3>
+                <h3 className="font-bold text-lg mb-4 text-gray-900">
+                  Categories
+                </h3>
                 <div className="space-y-3">
                   {categories.map((category) => (
                     <button
@@ -485,7 +563,9 @@ export default function ProductsPage() {
             {filters.map((filter) => (
               <Card key={filter.id} className="border border-gray-200">
                 <CardContent className="p-6">
-                  <h3 className="font-bold text-lg mb-4 text-gray-900">{filter.title}</h3>
+                  <h3 className="font-bold text-lg mb-4 text-gray-900">
+                    {filter.title}
+                  </h3>
                   <div className="space-y-2">
                     {filter.options.map((option) => (
                       <div key={option} className="flex items-center space-x-2">
@@ -496,7 +576,9 @@ export default function ProductsPage() {
                             if (checked) {
                               setSelectedFilters([...selectedFilters, option]);
                             } else {
-                              setSelectedFilters(selectedFilters.filter(f => f !== option));
+                              setSelectedFilters(
+                                selectedFilters.filter((f) => f !== option)
+                              );
                             }
                           }}
                         />
@@ -518,7 +600,9 @@ export default function ProductsPage() {
               <CardContent className="p-6">
                 <div className="flex items-center gap-2 mb-4">
                   <Award className="w-5 h-5 text-emerald-600" />
-                  <h3 className="font-bold text-lg text-gray-900">Premium Features</h3>
+                  <h3 className="font-bold text-lg text-gray-900">
+                    Premium Features
+                  </h3>
                 </div>
                 <div className="space-y-3">
                   {[
@@ -526,9 +610,12 @@ export default function ProductsPage() {
                     "27-Point Quality Check",
                     "Organic Certified",
                     "Freshness Guaranteed",
-                    "Vacuum Packed"
+                    "Vacuum Packed",
                   ].map((feature) => (
-                    <div key={feature} className="flex items-center gap-2 text-sm text-gray-700">
+                    <div
+                      key={feature}
+                      className="flex items-center gap-2 text-sm text-gray-700"
+                    >
                       <Check className="w-4 h-4 text-emerald-600" />
                       <span>{feature}</span>
                     </div>
@@ -543,7 +630,11 @@ export default function ProductsPage() {
             {/* Products Count */}
             <div className="mb-8">
               <p className="text-gray-600">
-                Showing <span className="font-semibold text-emerald-700">{sortedProducts.length}</span> products
+                Showing{" "}
+                <span className="font-semibold text-emerald-700">
+                  {sortedProducts.length}
+                </span>{" "}
+                products
               </p>
             </div>
 
@@ -582,9 +673,13 @@ export default function ProductsPage() {
                           onClick={() => handleAddToWishlist(product.id)}
                           className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors"
                         >
-                          <Heart className={`w-5 h-5 ${
-                            wishlist.includes(product.id) ? "fill-red-500 text-red-500" : "text-gray-700"
-                          }`} />
+                          <Heart
+                            className={`w-5 h-5 ${
+                              wishlist.includes(product.id)
+                                ? "fill-red-500 text-red-500"
+                                : "text-gray-700"
+                            }`}
+                          />
                         </button>
                         <button
                           onClick={() => setQuickViewProduct(product.id)}
@@ -603,17 +698,23 @@ export default function ProductsPage() {
                         </Badge>
                         <div className="flex items-center gap-1">
                           <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                          <span className="text-sm font-medium">{product.rating}</span>
-                          <span className="text-xs text-gray-500">({product.reviews})</span>
+                          <span className="text-sm font-medium">
+                            {product.rating}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            ({product.reviews})
+                          </span>
                         </div>
                       </div>
-                      
+
                       <h3 className="font-bold text-lg text-gray-900 mb-2 group-hover:text-emerald-700 transition-colors">
                         {product.name}
                       </h3>
-                      
+
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="text-emerald-900 font-bold text-xl">₹{product.price}</span>
+                        <span className="text-emerald-900 font-bold text-xl">
+                          ₹{product.price}
+                        </span>
                         {product.originalPrice > product.price && (
                           <span className="text-gray-500 line-through text-sm">
                             ₹{product.originalPrice}
@@ -623,12 +724,18 @@ export default function ProductsPage() {
 
                       <div className="flex items-center justify-between">
                         <div className="text-xs text-gray-500">
-                          Origin: <span className="font-medium">{product.origin}</span>
+                          Origin:{" "}
+                          <span className="font-medium">{product.origin}</span>
                         </div>
                         <div className="text-xs text-gray-500">
-                          Stock: <span className={`font-medium ${
-                            product.stock < 10 ? "text-red-600" : "text-emerald-600"
-                          }`}>
+                          Stock:{" "}
+                          <span
+                            className={`font-medium ${
+                              product.stock < 10
+                                ? "text-red-600"
+                                : "text-emerald-600"
+                            }`}
+                          >
                             {product.stock} left
                           </span>
                         </div>
@@ -670,15 +777,23 @@ export default function ProductsPage() {
                               <Badge variant="outline" className="mb-2">
                                 {product.category}
                               </Badge>
-                              <h3 className="text-xl font-bold text-gray-900 mb-2">{product.name}</h3>
+                              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                                {product.name}
+                              </h3>
                               <div className="flex items-center gap-2 mb-3">
                                 <div className="flex items-center gap-1">
                                   <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                                  <span className="font-medium">{product.rating}</span>
-                                  <span className="text-gray-500">({product.reviews} reviews)</span>
+                                  <span className="font-medium">
+                                    {product.rating}
+                                  </span>
+                                  <span className="text-gray-500">
+                                    ({product.reviews} reviews)
+                                  </span>
                                 </div>
                                 <span className="text-gray-400">•</span>
-                                <span className="text-gray-600">{product.origin}</span>
+                                <span className="text-gray-600">
+                                  {product.origin}
+                                </span>
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
@@ -686,9 +801,13 @@ export default function ProductsPage() {
                                 onClick={() => handleAddToWishlist(product.id)}
                                 className="p-2 hover:bg-gray-100 rounded-lg"
                               >
-                                <Heart className={`w-5 h-5 ${
-                                  wishlist.includes(product.id) ? "fill-red-500 text-red-500" : "text-gray-700"
-                                }`} />
+                                <Heart
+                                  className={`w-5 h-5 ${
+                                    wishlist.includes(product.id)
+                                      ? "fill-red-500 text-red-500"
+                                      : "text-gray-700"
+                                  }`}
+                                />
                               </button>
                               <button className="p-2 hover:bg-gray-100 rounded-lg">
                                 <Share2 className="w-5 h-5 text-gray-700" />
@@ -697,22 +816,32 @@ export default function ProductsPage() {
                           </div>
 
                           <p className="text-gray-600 mb-4 flex-grow">
-                            Premium quality {product.name.toLowerCase()} with exceptional taste and nutritional value.
-                            Perfect for snacking, cooking, or gifting.
+                            Premium quality {product.name.toLowerCase()} with
+                            exceptional taste and nutritional value. Perfect for
+                            snacking, cooking, or gifting.
                           </p>
 
                           <div className="flex items-center justify-between">
                             <div className="space-y-1">
                               <div className="flex items-center gap-2">
-                                <span className="text-2xl font-bold text-emerald-900">₹{product.price}</span>
+                                <span className="text-2xl font-bold text-emerald-900">
+                                  ₹{product.price}
+                                </span>
                                 {product.originalPrice > product.price && (
-                                  <span className="text-gray-500 line-through">₹{product.originalPrice}</span>
+                                  <span className="text-gray-500 line-through">
+                                    ₹{product.originalPrice}
+                                  </span>
                                 )}
                               </div>
                               <div className="text-sm text-gray-500">
-                                Stock: <span className={`font-medium ${
-                                  product.stock < 10 ? "text-red-600" : "text-emerald-600"
-                                }`}>
+                                Stock:{" "}
+                                <span
+                                  className={`font-medium ${
+                                    product.stock < 10
+                                      ? "text-red-600"
+                                      : "text-emerald-600"
+                                  }`}
+                                >
                                   {product.stock} units available
                                 </span>
                               </div>
@@ -720,14 +849,18 @@ export default function ProductsPage() {
                             <div className="flex items-center gap-4">
                               <div className="flex items-center border border-gray-300 rounded-lg">
                                 <button
-                                  onClick={() => handleQuantityChange("decrease")}
+                                  onClick={() =>
+                                    handleQuantityChange("decrease")
+                                  }
                                   className="p-2 hover:bg-gray-100"
                                 >
                                   <Minus className="w-4 h-4" />
                                 </button>
                                 <span className="px-4 py-2">{quantity}</span>
                                 <button
-                                  onClick={() => handleQuantityChange("increase")}
+                                  onClick={() =>
+                                    handleQuantityChange("increase")
+                                  }
                                   className="p-2 hover:bg-gray-100"
                                 >
                                   <Plus className="w-4 h-4" />
@@ -808,8 +941,16 @@ export default function ProductsPage() {
               </div>
               <div className="grid grid-cols-4 gap-4">
                 {featuredProduct.images.slice(1).map((image, index) => (
-                  <div key={index} className="relative h-24 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity">
-                    <Image src={image} alt={`${featuredProduct.name} ${index + 1}`} fill className="object-cover" />
+                  <div
+                    key={index}
+                    className="relative h-24 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                  >
+                    <Image
+                      src={image}
+                      alt={`${featuredProduct.name} ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
                 ))}
               </div>
@@ -824,7 +965,10 @@ export default function ProductsPage() {
                   </Badge>
                   <div className="flex items-center gap-2">
                     {featuredProduct.tags.map((tag) => (
-                      <Badge key={tag} className="bg-amber-100 text-amber-800 hover:bg-amber-100">
+                      <Badge
+                        key={tag}
+                        className="bg-amber-100 text-amber-800 hover:bg-amber-100"
+                      >
                         {tag}
                       </Badge>
                     ))}
@@ -835,9 +979,13 @@ export default function ProductsPage() {
                     onClick={() => handleAddToWishlist(featuredProduct.id)}
                     className="p-2 hover:bg-gray-100 rounded-lg"
                   >
-                    <Heart className={`w-6 h-6 ${
-                      wishlist.includes(featuredProduct.id) ? "fill-red-500 text-red-500" : "text-gray-700"
-                    }`} />
+                    <Heart
+                      className={`w-6 h-6 ${
+                        wishlist.includes(featuredProduct.id)
+                          ? "fill-red-500 text-red-500"
+                          : "text-gray-700"
+                      }`}
+                    />
                   </button>
                   <button className="p-2 hover:bg-gray-100 rounded-lg">
                     <Share2 className="w-6 h-6 text-gray-700" />
@@ -845,23 +993,34 @@ export default function ProductsPage() {
                 </div>
               </div>
 
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">{featuredProduct.name}</h1>
-              
+              <h1 className="text-3xl font-bold text-gray-900 mb-4">
+                {featuredProduct.name}
+              </h1>
+
               <div className="flex items-center gap-3 mb-6">
                 <div className="flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
+                    <Star
+                      key={i}
+                      className="w-5 h-5 fill-amber-400 text-amber-400"
+                    />
                   ))}
                 </div>
                 <span className="font-medium">{featuredProduct.rating}</span>
-                <span className="text-gray-500">({featuredProduct.reviews} reviews)</span>
+                <span className="text-gray-500">
+                  ({featuredProduct.reviews} reviews)
+                </span>
               </div>
 
-              <p className="text-gray-600 mb-8">{featuredProduct.description}</p>
+              <p className="text-gray-600 mb-8">
+                {featuredProduct.description}
+              </p>
 
               {/* Variants */}
               <div className="mb-8">
-                <h3 className="font-bold text-lg mb-4 text-gray-900">Select Weight</h3>
+                <h3 className="font-bold text-lg mb-4 text-gray-900">
+                  Select Weight
+                </h3>
                 <RadioGroup
                   value={selectedVariant}
                   onValueChange={setSelectedVariant}
@@ -882,8 +1041,12 @@ export default function ProductsPage() {
                             : "border-gray-300 hover:border-gray-400"
                         }`}
                       >
-                        <span className="font-bold text-gray-900">{variant.label}</span>
-                        <span className="text-lg font-bold text-emerald-700">₹{variant.price}</span>
+                        <span className="font-bold text-gray-900">
+                          {variant.label}
+                        </span>
+                        <span className="text-lg font-bold text-emerald-700">
+                          ₹{variant.price}
+                        </span>
                       </Label>
                     </div>
                   ))}
@@ -892,10 +1055,15 @@ export default function ProductsPage() {
 
               {/* Features */}
               <div className="mb-8">
-                <h3 className="font-bold text-lg mb-4 text-gray-900">Key Features</h3>
+                <h3 className="font-bold text-lg mb-4 text-gray-900">
+                  Key Features
+                </h3>
                 <div className="grid grid-cols-2 gap-3">
                   {featuredProduct.features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-2 text-sm text-gray-700">
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 text-sm text-gray-700"
+                    >
                       <Check className="w-4 h-4 text-emerald-600" />
                       <span>{feature}</span>
                     </div>
@@ -905,14 +1073,23 @@ export default function ProductsPage() {
 
               {/* Nutrition Info */}
               <div className="mb-8">
-                <h3 className="font-bold text-lg mb-4 text-gray-900">Nutrition Facts (per 100g)</h3>
+                <h3 className="font-bold text-lg mb-4 text-gray-900">
+                  Nutrition Facts (per 100g)
+                </h3>
                 <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
-                  {Object.entries(featuredProduct.nutrition).map(([key, value]) => (
-                    <div key={key} className="text-center p-3 bg-gray-50 rounded-lg">
-                      <div className="text-sm text-gray-600 capitalize">{key}</div>
-                      <div className="font-bold text-gray-900">{value}</div>
-                    </div>
-                  ))}
+                  {Object.entries(featuredProduct.nutrition).map(
+                    ([key, value]) => (
+                      <div
+                        key={key}
+                        className="text-center p-3 bg-gray-50 rounded-lg"
+                      >
+                        <div className="text-sm text-gray-600 capitalize">
+                          {key}
+                        </div>
+                        <div className="font-bold text-gray-900">{value}</div>
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
 
@@ -922,16 +1099,25 @@ export default function ProductsPage() {
                   <div>
                     <div className="flex items-center gap-3 mb-2">
                       <span className="text-3xl font-bold text-emerald-900">
-                        ₹{featuredProduct.variants.find(v => v.id === selectedVariant)?.price}
+                        ₹
+                        {
+                          featuredProduct.variants.find(
+                            (v) => v.id === selectedVariant
+                          )?.price
+                        }
                       </span>
-                      <span className="text-gray-500 line-through">₹{featuredProduct.originalPrice}</span>
+                      <span className="text-gray-500 line-through">
+                        ₹{featuredProduct.originalPrice}
+                      </span>
                       <Badge className="bg-gradient-to-r from-red-500 to-red-600 text-white">
                         Save {featuredProduct.discount}%
                       </Badge>
                     </div>
-                    <p className="text-sm text-gray-600">Free shipping on orders above ₹999</p>
+                    <p className="text-sm text-gray-600">
+                      Free shipping on orders above ₹999
+                    </p>
                   </div>
-                  
+
                   <div className="flex items-center gap-4">
                     <div className="flex items-center border border-gray-300 rounded-xl bg-white">
                       <button
@@ -940,7 +1126,9 @@ export default function ProductsPage() {
                       >
                         <Minus className="w-5 h-5" />
                       </button>
-                      <span className="px-6 py-3 text-lg font-bold">{quantity}</span>
+                      <span className="px-6 py-3 text-lg font-bold">
+                        {quantity}
+                      </span>
                       <button
                         onClick={() => handleQuantityChange("increase")}
                         className="p-3 hover:bg-gray-100 rounded-r-xl"
@@ -960,16 +1148,30 @@ export default function ProductsPage() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
                 {[
                   { icon: Truck, text: "Free Shipping", sub: "Above ₹999" },
-                  { icon: Shield, text: "Quality Guarantee", sub: "100% Authentic" },
-                  { icon: RefreshCw, text: "Easy Returns", sub: "30 Days Policy" },
-                  { icon: Package, text: "Secure Packaging", sub: "Vacuum Sealed" },
+                  {
+                    icon: Shield,
+                    text: "Quality Guarantee",
+                    sub: "100% Authentic",
+                  },
+                  {
+                    icon: RefreshCw,
+                    text: "Easy Returns",
+                    sub: "30 Days Policy",
+                  },
+                  {
+                    icon: Package,
+                    text: "Secure Packaging",
+                    sub: "Vacuum Sealed",
+                  },
                 ].map((item, index) => (
                   <div key={index} className="flex items-center gap-3">
                     <div className="p-2 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-lg">
                       <item.icon className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <div className="font-medium text-gray-900">{item.text}</div>
+                      <div className="font-medium text-gray-900">
+                        {item.text}
+                      </div>
                       <div className="text-xs text-gray-500">{item.sub}</div>
                     </div>
                   </div>
@@ -998,65 +1200,65 @@ export default function ProductsPage() {
                 icon: Leaf,
                 title: "100% Natural",
                 description: "No preservatives or artificial additives",
-                color: "from-emerald-500 to-emerald-700"
+                color: "from-emerald-500 to-emerald-700",
               },
               {
                 icon: Award,
                 title: "Premium Quality",
                 description: "Hand-selected for size and perfection",
-                color: "from-amber-500 to-amber-700"
+                color: "from-amber-500 to-amber-700",
               },
               {
                 icon: Clock,
                 title: "Freshness Locked",
                 description: "Vacuum sealed for maximum freshness",
-                color: "from-emerald-500 to-emerald-700"
+                color: "from-emerald-500 to-emerald-700",
               },
               {
                 icon: Zap,
                 title: "Energy Boost",
                 description: "Natural source of vitamins and minerals",
-                color: "from-amber-500 to-amber-700"
+                color: "from-amber-500 to-amber-700",
               },
               {
                 icon: Droplets,
                 title: "Low Moisture",
                 description: "Perfectly dried for long shelf life",
-                color: "from-emerald-500 to-emerald-700"
+                color: "from-emerald-500 to-emerald-700",
               },
               {
                 icon: Scale,
                 title: "Accurate Weight",
                 description: "No short weighing guaranteed",
-                color: "from-amber-500 to-amber-700"
+                color: "from-amber-500 to-amber-700",
               },
               {
                 icon: Shield,
                 title: "Safe & Hygienic",
                 description: "Processed in certified facilities",
-                color: "from-emerald-500 to-emerald-700"
+                color: "from-emerald-500 to-emerald-700",
               },
               {
                 icon: Truck,
                 title: "Fast Delivery",
                 description: "Shipped within 24 hours",
-                color: "from-amber-500 to-amber-700"
+                color: "from-amber-500 to-amber-700",
               },
             ].map((benefit, index) => (
-              <div 
+              <div
                 key={index}
                 className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-amber-100"
               >
-                <div className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 bg-gradient-to-br ${benefit.color} rounded-2xl group-hover:scale-110 transition-transform duration-300`}>
+                <div
+                  className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 bg-gradient-to-br ${benefit.color} rounded-2xl group-hover:scale-110 transition-transform duration-300`}
+                >
                   <benefit.icon className="w-6 h-6 text-white" />
                 </div>
                 <div className="pt-8 text-center">
                   <h3 className="text-xl font-bold text-gray-900 mb-3">
                     {benefit.title}
                   </h3>
-                  <p className="text-gray-600">
-                    {benefit.description}
-                  </p>
+                  <p className="text-gray-600">{benefit.description}</p>
                 </div>
               </div>
             ))}
@@ -1101,14 +1303,22 @@ export default function ProductsPage() {
                   </Badge>
                   <div className="flex items-center gap-1">
                     <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                    <span className="text-sm font-medium">{product.rating}</span>
+                    <span className="text-sm font-medium">
+                      {product.rating}
+                    </span>
                   </div>
                 </div>
-                <h3 className="font-bold text-lg text-gray-900 mb-2">{product.name}</h3>
+                <h3 className="font-bold text-lg text-gray-900 mb-2">
+                  {product.name}
+                </h3>
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="text-emerald-900 font-bold text-xl">₹{product.price}</span>
+                  <span className="text-emerald-900 font-bold text-xl">
+                    ₹{product.price}
+                  </span>
                   {product.originalPrice > product.price && (
-                    <span className="text-gray-500 line-through text-sm">₹{product.originalPrice}</span>
+                    <span className="text-gray-500 line-through text-sm">
+                      ₹{product.originalPrice}
+                    </span>
                   )}
                 </div>
                 <button className="w-full py-3 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white rounded-lg font-semibold hover:from-emerald-700 hover:to-emerald-900 transition-all duration-300">
@@ -1153,13 +1363,21 @@ export default function ProductsPage() {
 
             <TabsContent value="description" className="p-8">
               <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-gray-900">Premium Quality California Almonds</h3>
+                <h3 className="text-2xl font-bold text-gray-900">
+                  Premium Quality California Almonds
+                </h3>
                 <p className="text-gray-600">
-                  Our Premium California Almonds are sourced directly from certified organic farms in California's Central Valley, known for producing the world's finest almonds. Each almond undergoes a rigorous 27-point quality check to ensure superior size, color, and texture.
+                  Our Premium California Almonds are sourced directly from
+                  certified organic farms in California's Central Valley, known
+                  for producing the world's finest almonds. Each almond
+                  undergoes a rigorous 27-point quality check to ensure superior
+                  size, color, and texture.
                 </p>
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <h4 className="font-bold text-lg mb-3 text-gray-900">Key Features:</h4>
+                    <h4 className="font-bold text-lg mb-3 text-gray-900">
+                      Key Features:
+                    </h4>
                     <ul className="space-y-2">
                       {featuredProduct.features.map((feature, index) => (
                         <li key={index} className="flex items-center gap-2">
@@ -1170,11 +1388,17 @@ export default function ProductsPage() {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-bold text-lg mb-3 text-gray-900">Storage Instructions:</h4>
+                    <h4 className="font-bold text-lg mb-3 text-gray-900">
+                      Storage Instructions:
+                    </h4>
                     <ul className="space-y-2 text-gray-700">
-                      <li>• Store in a cool, dry place away from direct sunlight</li>
+                      <li>
+                        • Store in a cool, dry place away from direct sunlight
+                      </li>
                       <li>• Keep in an airtight container after opening</li>
-                      <li>• Refrigerate for extended shelf life (up to 2 years)</li>
+                      <li>
+                        • Refrigerate for extended shelf life (up to 2 years)
+                      </li>
                       <li>• Avoid exposure to moisture</li>
                     </ul>
                   </div>
@@ -1184,14 +1408,22 @@ export default function ProductsPage() {
 
             <TabsContent value="nutrition" className="p-8">
               <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-gray-900">Nutritional Information</h3>
+                <h3 className="text-2xl font-bold text-gray-900">
+                  Nutritional Information
+                </h3>
                 <div className="bg-gray-50 rounded-xl p-6">
                   <table className="w-full">
                     <thead>
                       <tr className="border-b">
-                        <th className="text-left py-3 font-bold text-gray-900">Nutrient</th>
-                        <th className="text-right py-3 font-bold text-gray-900">Per 100g</th>
-                        <th className="text-right py-3 font-bold text-gray-900">% Daily Value*</th>
+                        <th className="text-left py-3 font-bold text-gray-900">
+                          Nutrient
+                        </th>
+                        <th className="text-right py-3 font-bold text-gray-900">
+                          Per 100g
+                        </th>
+                        <th className="text-right py-3 font-bold text-gray-900">
+                          % Daily Value*
+                        </th>
                       </tr>
                     </thead>
                     <tbody className="divide-y">
@@ -1208,13 +1440,19 @@ export default function ProductsPage() {
                       ].map(([nutrient, value, daily], index) => (
                         <tr key={index}>
                           <td className="py-3 text-gray-700">{nutrient}</td>
-                          <td className="py-3 text-right font-medium text-gray-900">{value}</td>
-                          <td className="py-3 text-right text-emerald-700">{daily}</td>
+                          <td className="py-3 text-right font-medium text-gray-900">
+                            {value}
+                          </td>
+                          <td className="py-3 text-right text-emerald-700">
+                            {daily}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
-                  <p className="text-sm text-gray-500 mt-4">*Percent Daily Values are based on a 2,000 calorie diet.</p>
+                  <p className="text-sm text-gray-500 mt-4">
+                    *Percent Daily Values are based on a 2,000 calorie diet.
+                  </p>
                 </div>
               </div>
             </TabsContent>
@@ -1223,20 +1461,33 @@ export default function ProductsPage() {
               <div className="space-y-8">
                 <div className="flex items-center gap-8">
                   <div className="text-center">
-                    <div className="text-5xl font-bold text-gray-900 mb-2">4.9</div>
+                    <div className="text-5xl font-bold text-gray-900 mb-2">
+                      4.9
+                    </div>
                     <div className="flex items-center justify-center gap-1 mb-2">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
+                        <Star
+                          key={i}
+                          className="w-5 h-5 fill-amber-400 text-amber-400"
+                        />
                       ))}
                     </div>
                     <div className="text-gray-600">1,248 reviews</div>
                   </div>
                   <div className="flex-1">
                     {[5, 4, 3, 2, 1].map((rating) => (
-                      <div key={rating} className="flex items-center gap-3 mb-2">
-                        <span className="w-10 text-gray-600">{rating} star</span>
+                      <div
+                        key={rating}
+                        className="flex items-center gap-3 mb-2"
+                      >
+                        <span className="w-10 text-gray-600">
+                          {rating} star
+                        </span>
                         <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                          <div className="h-full bg-amber-500" style={{ width: `${(rating/5)*100}%` }} />
+                          <div
+                            className="h-full bg-amber-500"
+                            style={{ width: `${(rating / 5) * 100}%` }}
+                          />
                         </div>
                         <span className="w-10 text-gray-600">84%</span>
                       </div>
@@ -1247,21 +1498,46 @@ export default function ProductsPage() {
                 {/* Sample Reviews */}
                 <div className="space-y-6">
                   {[
-                    { name: "Priya Sharma", rating: 5, date: "2 days ago", comment: "Exceptional quality! The almonds are fresh, crunchy, and perfectly sized. Will definitely order again." },
-                    { name: "Rajesh Kumar", rating: 5, date: "1 week ago", comment: "Best almonds I've ever tasted. Premium packaging and fast delivery. Highly recommended!" },
-                    { name: "Anita Patel", rating: 4, date: "2 weeks ago", comment: "Great quality product. Slightly expensive but worth it for the quality." },
+                    {
+                      name: "Priya Sharma",
+                      rating: 5,
+                      date: "2 days ago",
+                      comment:
+                        "Exceptional quality! The almonds are fresh, crunchy, and perfectly sized. Will definitely order again.",
+                    },
+                    {
+                      name: "Rajesh Kumar",
+                      rating: 5,
+                      date: "1 week ago",
+                      comment:
+                        "Best almonds I've ever tasted. Premium packaging and fast delivery. Highly recommended!",
+                    },
+                    {
+                      name: "Anita Patel",
+                      rating: 4,
+                      date: "2 weeks ago",
+                      comment:
+                        "Great quality product. Slightly expensive but worth it for the quality.",
+                    },
                   ].map((review, index) => (
                     <div key={index} className="border-b pb-6">
                       <div className="flex items-center justify-between mb-3">
                         <div>
-                          <div className="font-bold text-gray-900">{review.name}</div>
+                          <div className="font-bold text-gray-900">
+                            {review.name}
+                          </div>
                           <div className="flex items-center gap-1">
                             {[...Array(review.rating)].map((_, i) => (
-                              <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                              <Star
+                                key={i}
+                                className="w-4 h-4 fill-amber-400 text-amber-400"
+                              />
                             ))}
                           </div>
                         </div>
-                        <span className="text-gray-500 text-sm">{review.date}</span>
+                        <span className="text-gray-500 text-sm">
+                          {review.date}
+                        </span>
                       </div>
                       <p className="text-gray-700">{review.comment}</p>
                     </div>
@@ -1274,7 +1550,9 @@ export default function ProductsPage() {
               <div className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-8">
                   <div>
-                    <h4 className="font-bold text-lg mb-4 text-gray-900">Shipping Policy</h4>
+                    <h4 className="font-bold text-lg mb-4 text-gray-900">
+                      Shipping Policy
+                    </h4>
                     <ul className="space-y-3 text-gray-700">
                       <li className="flex items-center gap-2">
                         <Check className="w-5 h-5 text-emerald-600" />
@@ -1295,7 +1573,9 @@ export default function ProductsPage() {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-bold text-lg mb-4 text-gray-900">Return Policy</h4>
+                    <h4 className="font-bold text-lg mb-4 text-gray-900">
+                      Return Policy
+                    </h4>
                     <ul className="space-y-3 text-gray-700">
                       <li className="flex items-center gap-2">
                         <Check className="w-5 h-5 text-emerald-600" />
@@ -1331,7 +1611,8 @@ export default function ProductsPage() {
               Ready to Experience Premium Quality?
             </h2>
             <p className="text-white/90 text-xl mb-10 max-w-2xl mx-auto">
-              Shop our premium collection of dry fruits and nuts today. Free shipping on orders above ₹999.
+              Shop our premium collection of dry fruits and nuts today. Free
+              shipping on orders above ₹999.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button className="px-8 py-4 bg-white text-emerald-900 rounded-full font-semibold text-lg hover:bg-amber-50 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3">

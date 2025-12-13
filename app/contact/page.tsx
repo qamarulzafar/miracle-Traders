@@ -1,14 +1,16 @@
 import Image from "next/image";
 import { Leaf, Mail, MapPin, Phone, ShieldCheck, Truck } from "lucide-react";
+import ContactFormSection from "../components/contact_form";
+import contactimg from "../../public/images/dry_fruit_contact_sec.webp"
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white text-black p-6 pt-32">
+    <main className="min-h-screen mt-20 bg-white text-black p-6 pt-32">
 
       {/* HERO SECTION */}
       <section className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
         <div>
-          <h1 className="text-4xl md:text-6xl font-bold leading-tight text-green-700">
+          <h1 className="text-4xl md:text-6xl font-extrabold leading-14 text-green-700">
             Premium Dry Fruits & Organic Products
           </h1>
           <p className="mt-4 text-lg text-gray-700">
@@ -38,7 +40,7 @@ export default function Home() {
         {/* IMAGE SECTION */}
         <div className="relative w-full h-80 rounded-2xl overflow-hidden shadow-xl border border-green-200">
           <Image
-            src="/dryfruits.jpg"
+            src= {contactimg}
             alt="Dry Fruits"
             fill
             className="object-cover"
@@ -79,6 +81,8 @@ export default function Home() {
           ></iframe>
         </div>
       </section>
+
+      <ContactFormSection/>
 
     </main>
   );
