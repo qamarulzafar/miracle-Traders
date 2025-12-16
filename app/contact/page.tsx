@@ -1,8 +1,11 @@
+"use client";
+
 import Image from "next/image";
 import { Leaf, Mail, MapPin, Phone, ShieldCheck, Truck } from "lucide-react";
 import ContactFormSection from "../components/contact_form";
 import contactimg from "../../public/images/dry_fruit_contact_sec.webp";
 import { JSX } from "react";
+
 
 export default function Home(): JSX.Element {
   return (

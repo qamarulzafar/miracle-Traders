@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';;
 import "./globals.css";
 import TopBar from "./components/top_bar";
 import Header from "./components/header"
+import Footer from "./components/footer";
 
 const geistSans = Inter({
   variable: "--font-geist-sans",
@@ -33,6 +34,7 @@ export default function RootLayout({
         <TopBar/>
         <Header/>
         {children}
+        <Footer/>
       </body>
     </html>
   );
