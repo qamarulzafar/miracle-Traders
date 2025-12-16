@@ -9,12 +9,60 @@ import {
   Wheat, Coffee, Gift, Apple, Soup, FlaskConical, Utensils,
   LucideIcon
 } from "lucide-react"
-import { useState } from "react"
+import { useState, ReactNode } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 
+// Type definitions
+interface Category {
+  title: string;
+  description: string;
+  image: string;
+  count: string;
+  gradient: string;
+}
+
+interface FeaturedProduct {
+  id: string;
+  name: string;
+  category: string;
+  image: string;
+  price: number;
+  originalPrice: number;
+  rating: number;
+  reviews: number;
+  discount: number;
+  tags: string[];
+}
+
+interface QualityHighlight {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  count: string;
+}
+
+interface Stat {
+  label: string;
+  value: string;
+  icon: LucideIcon;
+}
+
+interface Testimonial {
+  name: string;
+  role: string;
+  comment: string;
+  rating: number;
+}
+
+interface ContactInfo {
+  icon: LucideIcon;
+  text: string;
+  label: string;
+}
+
 export default function Sec1() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false)
   const [wishlist, setWishlist] = useState<string[]>([])
 
   // Icon mapping for categories
@@ -34,7 +82,7 @@ export default function Sec1() {
     "Home Chef & Food Blogger": Smartphone
   }
 
-  const categories = [
+  const categories: Category[] = [
     {
       title: "Dry Fruits",
       description: "Premium quality almonds, cashews, walnuts, and more",
@@ -79,7 +127,7 @@ export default function Sec1() {
     },
   ]
 
-  const featuredProducts = [
+  const featuredProducts: FeaturedProduct[] = [
     {
       id: "1",
       name: "Premium California Almonds",
@@ -154,7 +202,7 @@ export default function Sec1() {
     },
   ]
 
-  const qualityHighlights = [
+  const qualityHighlights: QualityHighlight[] = [
     {
       icon: Shield,
       title: "Quality Certified",
@@ -193,14 +241,41 @@ export default function Sec1() {
     },
   ]
 
-  const stats = [
+  const stats: Stat[] = [
     { label: "Happy Customers", value: "10K+", icon: Users },
     { label: "Products", value: "150+", icon: Package },
     { label: "Years Experience", value: "15+", icon: Award },
     { label: "Delivery Cities", value: "50+", icon: Truck },
   ]
 
-  const handleAddToWishlist = (productId: string) => {
+  const testimonials: Testimonial[] = [
+    {
+      name: "Priya Sharma",
+      role: "Executive Chef",
+      comment: "The quality is exceptional! Fresh, premium ingredients that elevate my recipes.",
+      rating: 5
+    },
+    {
+      name: "Rajesh Kumar",
+      role: "Nutritionist",
+      comment: "As a nutritionist, I recommend these products to all my clients. Pure and premium quality!",
+      rating: 5
+    },
+    {
+      name: "Anita Patel",
+      role: "Home Chef & Food Blogger",
+      comment: "The freshness and quality are unmatched. My go-to source for premium ingredients!",
+      rating: 5
+    },
+  ]
+
+  const contactInfo: ContactInfo[] = [
+    { icon: Phone, text: "+91 98765 43210", label: "Premium Support" },
+    { icon: Mail, text: "premium@naturalgoods.com", label: "Email Us" },
+    { icon: MapPin, text: "Mumbai, Delhi, Bangalore", label: "Showrooms" },
+  ]
+
+  const handleAddToWishlist = (productId: string): void => {
     if (wishlist.includes(productId)) {
       setWishlist(wishlist.filter(id => id !== productId))
     } else {
@@ -209,7 +284,7 @@ export default function Sec1() {
   }
 
   // Simple Progress Bar Component (replacement)
-  const ProgressBar = ({ value, className = "" }: { value: number; className?: string }) => {
+  const ProgressBar = ({ value, className = "" }: { value: number; className?: string }): JSX.Element => {
     return (
       <div className={`w-full bg-gray-200 rounded-full h-1 ${className}`}>
         <div 
@@ -219,6 +294,18 @@ export default function Sec1() {
       </div>
     )
   }
+
+  // List items for "Why Choose Us" section
+  const whyChooseItems: string[] = [
+    "Direct sourcing from certified organic farms worldwide",
+    "27-point quality check for every single product",
+    "Vacuum-sealed packaging for maximum freshness",
+    "Competitive pricing with premium quality guarantee",
+    "Personalized customer service and expert consultation",
+    "Fast and reliable nationwide delivery network",
+    "15+ years of industry expertise and trust",
+    "Money-back satisfaction guarantee on all products"
+  ]
 
   return (
     <div className="min-h-screen mt-30 bg-gradient-to-b from-white via-amber-50/20 to-white">
@@ -413,12 +500,16 @@ export default function Sec1() {
                       <button
                         onClick={() => handleAddToWishlist(product.id)}
                         className="p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
+                        aria-label={wishlist.includes(product.id) ? "Remove from wishlist" : "Add to wishlist"}
                       >
                         <Heart className={`w-4 h-4 ${
                           wishlist.includes(product.id) ? "fill-red-500 text-red-500" : "text-gray-700"
                         }`} />
                       </button>
-                      <button className="p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors">
+                      <button 
+                        className="p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
+                        aria-label="Quick view"
+                      >
                         <Eye className="w-4 h-4 text-gray-700" />
                       </button>
                     </div>
@@ -528,16 +619,7 @@ export default function Sec1() {
               </div>
               
               <div className="space-y-6">
-                {[
-                  "Direct sourcing from certified organic farms worldwide",
-                  "27-point quality check for every single product",
-                  "Vacuum-sealed packaging for maximum freshness",
-                  "Competitive pricing with premium quality guarantee",
-                  "Personalized customer service and expert consultation",
-                  "Fast and reliable nationwide delivery network",
-                  "15+ years of industry expertise and trust",
-                  "Money-back satisfaction guarantee on all products"
-                ].map((item, index) => (
+                {whyChooseItems.map((item, index) => (
                   <div key={index} className="flex items-start gap-4 group">
                     <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-r from-green-700 to-emerald-800 flex items-center justify-center mt-0.5 group-hover:scale-110 transition-transform">
                       <Check className="w-5 h-5 text-white" />
@@ -603,26 +685,7 @@ export default function Sec1() {
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                name: "Priya Sharma",
-                role: "Executive Chef",
-                comment: "The quality is exceptional! Fresh, premium ingredients that elevate my recipes.",
-                rating: 5
-              },
-              {
-                name: "Rajesh Kumar",
-                role: "Nutritionist",
-                comment: "As a nutritionist, I recommend these products to all my clients. Pure and premium quality!",
-                rating: 5
-              },
-              {
-                name: "Anita Patel",
-                role: "Home Chef & Food Blogger",
-                comment: "The freshness and quality are unmatched. My go-to source for premium ingredients!",
-                rating: 5
-              },
-            ].map((testimonial, index) => {
+            {testimonials.map((testimonial, index) => {
               const Icon = testimonialIcons[testimonial.role] || Users
               return (
                 <Card key={index} className="border-0 shadow-xl hover:shadow-2xl transition-shadow">
@@ -638,7 +701,7 @@ export default function Sec1() {
                       ))}
                     </div>
                     <p className="text-gray-700 text-lg italic mb-8 leading-relaxed">
-                      "{testimonial.comment}"
+                      &ldquo;{testimonial.comment}&rdquo;
                     </p>
                     <div className="flex items-center gap-4">
                       <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-700/10 to-emerald-800/10 flex items-center justify-center">
@@ -691,11 +754,7 @@ export default function Sec1() {
             
             {/* Contact Info */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 pt-12 border-t border-gray-700">
-              {[
-                { icon: Phone, text: "+91 98765 43210", label: "Premium Support" },
-                { icon: Mail, text: "premium@naturalgoods.com", label: "Email Us" },
-                { icon: MapPin, text: "Mumbai, Delhi, Bangalore", label: "Showrooms" },
-              ].map((item, index) => {
+              {contactInfo.map((item, index) => {
                 const Icon = item.icon
                 return (
                   <div key={index} className="text-center">
@@ -733,4 +792,4 @@ export default function Sec1() {
       </footer>
     </div>
   )
-}
+} 
