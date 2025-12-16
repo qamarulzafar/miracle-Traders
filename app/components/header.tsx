@@ -5,7 +5,7 @@ import { Search, Heart, ShoppingBag, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navLinks = [
-  { name: "Home", href: "/home" },
+  { name: "Home", href: "/" },
   { name: "About", href: "/about" },
   { name: "Product", href: "/product" },
   { name: "Quality", href: "/quality" },

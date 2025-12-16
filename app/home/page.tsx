@@ -6,7 +6,7 @@ import {
   Check, Leaf, Shield, Truck, Award, Sparkles, ChevronRight, Star, 
   Package, Users, Clock, ShoppingBag, Heart, Eye, Search, Menu, X, 
   Phone, Mail, MapPin, ChefHat, Stethoscope, Smartphone, Nut, 
-  Wheat, Bowl, Coffee, Pepper, Gift, Apple, Soup, FlaskConical,
+  Wheat, Coffee, Gift, Apple, Soup, FlaskConical, Utensils,
   LucideIcon
 } from "lucide-react"
 import { useState } from "react"
@@ -21,9 +21,9 @@ export default function HomePage() {
   const categoryIcons: { [key: string]: LucideIcon } = {
     "Dry Fruits": Nut,
     "Rice": Wheat,
-    "Daal (Lentils)": Bowl,
+    "Daal (Lentils)": Soup,
     "Dry Fruit Powder": Coffee,
-    "Curry Masalay": Pepper,
+    "Curry Masalay": Utensils,
     "Specialty Items": Gift
   }
 
