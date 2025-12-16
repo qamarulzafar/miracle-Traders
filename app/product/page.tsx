@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   ShoppingBag,
   Heart,
@@ -28,6 +28,7 @@ import {
   Droplets,
   Scale,
   Tag,
+  LucideIcon,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -38,26 +39,114 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+
+// Import images with type definitions
 import productImg1 from "./../../public/images/product_home_1.jpg";
 import productImg2 from "./../../public/images/product_home_2.webp";
 import productImg3 from "./../../public/images/product_home_3.webp";
 import productImg4 from "./../../public/images/product_home_4.webp";
-// import productImg5 from "./../../public/images/product_home_5.png";
 
-export default function ProductsPage() {
-  const [quantity, setQuantity] = useState(1);
-  const [selectedVariant, setSelectedVariant] = useState("500g");
+// Type definitions
+interface Category {
+  id: string;
+  name: string;
+  count: number;
+}
+
+interface FilterOption {
+  id: string;
+  title: string;
+  options: string[];
+}
+
+interface ProductVariant {
+  id: string;
+  price: number;
+  label: string;
+}
+
+interface ProductNutrition {
+  calories: number;
+  protein: string;
+  carbs: string;
+  fiber: string;
+  fat: string;
+}
+
+interface FeaturedProduct {
+  id: string;
+  name: string;
+  category: string;
+  rating: number;
+  reviews: number;
+  price: number;
+  originalPrice: number;
+  discount: number;
+  description: string;
+  features: string[];
+  variants: ProductVariant[];
+  images: string[];
+  nutrition: ProductNutrition;
+  tags: string[];
+}
+
+interface Product {
+  id: string;
+  name: string;
+  category: string;
+  price: number;
+  originalPrice: number;
+  discount: number;
+  rating: number;
+  reviews: number;
+  image: string;
+  tags: string[];
+  origin: string;
+  stock: number;
+  isNew: boolean;
+}
+
+interface Benefit {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  color: string;
+}
+
+interface Review {
+  name: string;
+  rating: number;
+  date: string;
+  comment: string;
+}
+
+interface TrustBadge {
+  icon: LucideIcon;
+  text: string;
+  sub: string;
+}
+
+interface ImageCollage {
+  src: typeof productImg1 | typeof productImg2 | typeof productImg3 | typeof productImg4;
+  alt: string;
+  width: number;
+  height: number;
+}
+
+export default function ProductsPage(): JSX.Element {
+  const [quantity, setQuantity] = useState<number>(1);
+  const [selectedVariant, setSelectedVariant] = useState<string>("500g");
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [cart, setCart] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [priceRange, setPriceRange] = useState([100, 5000]);
-  const [sortBy, setSortBy] = useState("featured");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [priceRange, setPriceRange] = useState<[number, number]>([100, 5000]);
+  const [sortBy, setSortBy] = useState<string>("featured");
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [quickViewProduct, setQuickViewProduct] = useState<string | null>(null);
 
   // Product categories
-  const categories = [
+  const categories: Category[] = [
     { id: "all", name: "All Products", count: 156 },
     { id: "almonds", name: "Almonds", count: 24 },
     { id: "walnuts", name: "Walnuts", count: 18 },
@@ -69,7 +158,7 @@ export default function ProductsPage() {
   ];
 
   // Filter options
-  const filters = [
+  const filters: FilterOption[] = [
     {
       id: "origin",
       title: "Origin",
@@ -93,7 +182,7 @@ export default function ProductsPage() {
   ];
 
   // Featured product
-  const featuredProduct = {
+  const featuredProduct: FeaturedProduct = {
     id: "prod-premium-almonds",
     name: "Premium California Almonds",
     category: "Almonds",
@@ -134,7 +223,7 @@ export default function ProductsPage() {
   };
 
   // Sample products
-  const products = [
+  const products: Product[] = [
     {
       id: "1",
       name: "Kashmiri Walnuts",
@@ -317,30 +406,138 @@ export default function ProductsPage() {
     },
   ];
 
+  // Image collage data
+  const imageCollage: ImageCollage[] = [
+    { src: productImg1, alt: "product_homeImage1", width: 200, height: 160 },
+    { src: productImg2, alt: "product_image2", width: 200, height: 160 },
+    { src: productImg3, alt: "product_image3", width: 200, height: 160 },
+    { src: productImg4, alt: "product_image4", width: 200, height: 160 },
+  ];
+
   // Related products
-  const relatedProducts = products.slice(0, 4);
+  const relatedProducts: Product[] = products.slice(0, 4);
 
-  const handleAddToCart = (productId: string) => {
-    setCart([...cart, productId]);
+  // Trust badges for featured product
+  const trustBadges: TrustBadge[] = [
+    { icon: Truck, text: "Free Shipping", sub: "Above ₹999" },
+    { icon: Shield, text: "Quality Guarantee", sub: "100% Authentic" },
+    { icon: RefreshCw, text: "Easy Returns", sub: "30 Days Policy" },
+    { icon: Package, text: "Secure Packaging", sub: "Vacuum Sealed" },
+  ];
+
+  // Product benefits
+  const productBenefits: Benefit[] = [
+    {
+      icon: Leaf,
+      title: "100% Natural",
+      description: "No preservatives or artificial additives",
+      color: "from-emerald-500 to-emerald-700",
+    },
+    {
+      icon: Award,
+      title: "Premium Quality",
+      description: "Hand-selected for size and perfection",
+      color: "from-amber-500 to-amber-700",
+    },
+    {
+      icon: Clock,
+      title: "Freshness Locked",
+      description: "Vacuum sealed for maximum freshness",
+      color: "from-emerald-500 to-emerald-700",
+    },
+    {
+      icon: Zap,
+      title: "Energy Boost",
+      description: "Natural source of vitamins and minerals",
+      color: "from-amber-500 to-amber-700",
+    },
+    {
+      icon: Droplets,
+      title: "Low Moisture",
+      description: "Perfectly dried for long shelf life",
+      color: "from-emerald-500 to-emerald-700",
+    },
+    {
+      icon: Scale,
+      title: "Accurate Weight",
+      description: "No short weighing guaranteed",
+      color: "from-amber-500 to-amber-700",
+    },
+    {
+      icon: Shield,
+      title: "Safe & Hygienic",
+      description: "Processed in certified facilities",
+      color: "from-emerald-500 to-emerald-700",
+    },
+    {
+      icon: Truck,
+      title: "Fast Delivery",
+      description: "Shipped within 24 hours",
+      color: "from-amber-500 to-amber-700",
+    },
+  ];
+
+  // Sample reviews
+  const reviews: Review[] = [
+    {
+      name: "Priya Sharma",
+      rating: 5,
+      date: "2 days ago",
+      comment:
+        "Exceptional quality! The almonds are fresh, crunchy, and perfectly sized. Will definitely order again.",
+    },
+    {
+      name: "Rajesh Kumar",
+      rating: 5,
+      date: "1 week ago",
+      comment:
+        "Best almonds I've ever tasted. Premium packaging and fast delivery. Highly recommended!",
+    },
+    {
+      name: "Anita Patel",
+      rating: 4,
+      date: "2 weeks ago",
+      comment:
+        "Great quality product. Slightly expensive but worth it for the quality.",
+    },
+  ];
+
+  const handleAddToCart = (productId: string): void => {
+    setCart((prevCart) => [...prevCart, productId]);
   };
 
-  const handleAddToWishlist = (productId: string) => {
-    if (wishlist.includes(productId)) {
-      setWishlist(wishlist.filter((id) => id !== productId));
-    } else {
-      setWishlist([...wishlist, productId]);
-    }
+  const handleAddToWishlist = (productId: string): void => {
+    setWishlist((prevWishlist) => {
+      if (prevWishlist.includes(productId)) {
+        return prevWishlist.filter((id) => id !== productId);
+      } else {
+        return [...prevWishlist, productId];
+      }
+    });
   };
 
-  const handleQuantityChange = (action: "increase" | "decrease") => {
-    if (action === "increase") {
-      setQuantity(quantity + 1);
-    } else if (action === "decrease" && quantity > 1) {
-      setQuantity(quantity - 1);
-    }
+  const handleQuantityChange = (action: "increase" | "decrease"): void => {
+    setQuantity((prevQuantity) => {
+      if (action === "increase") {
+        return prevQuantity + 1;
+      } else if (action === "decrease" && prevQuantity > 1) {
+        return prevQuantity - 1;
+      }
+      return prevQuantity;
+    });
   };
 
-  const filteredProducts = products.filter((product) => {
+  const handleFilterChange = (option: string, checked: boolean): void => {
+    setSelectedFilters((prevFilters) => {
+      if (checked) {
+        return [...prevFilters, option];
+      } else {
+        return prevFilters.filter((f) => f !== option);
+      }
+    });
+  };
+
+  const filteredProducts: Product[] = products.filter((product) => {
     if (
       selectedCategory !== "all" &&
       product.category.toLowerCase() !== selectedCategory.toLowerCase()
@@ -354,7 +551,7 @@ export default function ProductsPage() {
   });
 
   // Sort products
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
+  const sortedProducts: Product[] = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
       case "price-low":
         return a.price - b.price;
@@ -368,6 +565,35 @@ export default function ProductsPage() {
         return 0;
     }
   });
+
+  const renderStars = (rating: number): JSX.Element[] => {
+    return Array.from({ length: 5 }, (_, i: number) => (
+      <Star
+        key={i}
+        className={`w-4 h-4 ${i < rating ? "fill-amber-400 text-amber-400" : "text-gray-300"}`}
+      />
+    ));
+  };
+
+  const renderRatingStars = (rating: number, size: "sm" | "md" | "lg" = "md"): JSX.Element[] => {
+    const sizeClasses = {
+      sm: "w-3 h-3",
+      md: "w-4 h-4",
+      lg: "w-5 h-5",
+    };
+    
+    return Array.from({ length: 5 }, (_, i: number) => (
+      <Star
+        key={i}
+        className={`${sizeClasses[size]} ${i < rating ? "fill-amber-400 text-amber-400" : "text-gray-300"}`}
+      />
+    ));
+  };
+
+  const getCurrentVariantPrice = (): number => {
+    const variant = featuredProduct.variants.find((v) => v.id === selectedVariant);
+    return variant ? variant.price : featuredProduct.price;
+  };
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-amber-50 to-white pt-[140px] pb-24">
@@ -384,7 +610,6 @@ export default function ProductsPage() {
             </div>
 
             <h1 className="text-5xl md:text-6xl font-extrabold text-gray-800 leading-tight mb-4">
-              {/* High-Quality Rice, Daal */}
               <span className="block text-green-700">
                 <span className="text-gray-600">High-Quality Rice,</span> Daal
                 and Premium Dry Fruits
@@ -402,45 +627,17 @@ export default function ProductsPage() {
           <div className="relative w-full mx-auto px-4">
             {/* 4-Image Grid */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="rounded-xl overflow-hidden shadow-md">
-                <Image
-                  src={productImg1}
-                  alt="product_homeImage1"
-                  width={200} // width in px
-                  height={160} // height in px
-                  className="object-cover w-full h-full"
-                />
-              </div>
-
-              <div className="rounded-xl overflow-hidden shadow-md">
-                <Image
-                  src={productImg2}
-                  width={200}
-                  height={160}
-                  className="object-cover w-full h-full"
-                  alt="product_image2"
-                />
-              </div>
-
-              <div className="rounded-xl overflow-hidden shadow-md">
-                <Image
-                  src={productImg3}
-                  width={200}
-                  height={160}
-                  className="object-cover w-full h-full"
-                  alt="product_image3"
-                />
-              </div>
-
-              <div className="rounded-xl overflow-hidden shadow-md">
-                <Image
-                  src={productImg4}
-                  width={200}
-                  height={160}
-                  className="object-cover w-full h-full"
-                  alt="product_image4"
-                />
-              </div>
+              {imageCollage.map((img, index) => (
+                <div key={index} className="rounded-xl overflow-hidden shadow-md">
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    width={img.width}
+                    height={img.height}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -473,6 +670,7 @@ export default function ProductsPage() {
                     ? "bg-emerald-100 text-emerald-700"
                     : "bg-white text-gray-600"
                 }`}
+                aria-label="Grid view"
               >
                 <Grid className="w-5 h-5" />
               </button>
@@ -483,6 +681,7 @@ export default function ProductsPage() {
                     ? "bg-emerald-100 text-emerald-700"
                     : "bg-white text-gray-600"
                 }`}
+                aria-label="List view"
               >
                 <List className="w-5 h-5" />
               </button>
@@ -490,8 +689,9 @@ export default function ProductsPage() {
             <div className="relative">
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setSortBy(e.target.value)}
                 className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                aria-label="Sort products by"
               >
                 <option value="featured">Featured</option>
                 <option value="newest">Newest</option>
@@ -521,7 +721,7 @@ export default function ProductsPage() {
                     min={100}
                     step={100}
                     value={priceRange}
-                    onValueChange={setPriceRange}
+                    onValueChange={(value: number[]) => setPriceRange([value[0], value[1]])}
                     className="w-full"
                   />
                   <div className="flex justify-between text-sm text-gray-600">
@@ -548,6 +748,7 @@ export default function ProductsPage() {
                           ? "bg-emerald-50 text-emerald-700"
                           : "hover:bg-gray-50"
                       }`}
+                      aria-label={`View ${category.name} products`}
                     >
                       <span className="text-sm">{category.name}</span>
                       <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
@@ -570,20 +771,14 @@ export default function ProductsPage() {
                     {filter.options.map((option) => (
                       <div key={option} className="flex items-center space-x-2">
                         <Checkbox
-                          id={option}
+                          id={`${filter.id}-${option}`}
                           checked={selectedFilters.includes(option)}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              setSelectedFilters([...selectedFilters, option]);
-                            } else {
-                              setSelectedFilters(
-                                selectedFilters.filter((f) => f !== option)
-                              );
-                            }
-                          }}
+                          onCheckedChange={(checked: boolean) => 
+                            handleFilterChange(option, checked)
+                          }
                         />
                         <label
-                          htmlFor={option}
+                          htmlFor={`${filter.id}-${option}`}
                           className="text-sm text-gray-700 cursor-pointer"
                         >
                           {option}
@@ -642,243 +837,29 @@ export default function ProductsPage() {
             {viewMode === "grid" ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {sortedProducts.map((product) => (
-                  <div
+                  <ProductCard
                     key={product.id}
-                    className="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-emerald-200"
-                  >
-                    {/* Product Image */}
-                    <div className="relative h-64 overflow-hidden">
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        fill
-                        className="object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                      {/* Badges */}
-                      <div className="absolute top-4 left-4 flex flex-col gap-2">
-                        {product.discount > 0 && (
-                          <Badge className="bg-gradient-to-r from-red-500 to-red-600 text-white border-0">
-                            {product.discount}% OFF
-                          </Badge>
-                        )}
-                        {product.isNew && (
-                          <Badge className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white border-0">
-                            NEW
-                          </Badge>
-                        )}
-                      </div>
-                      {/* Quick Actions */}
-                      <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <button
-                          onClick={() => handleAddToWishlist(product.id)}
-                          className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors"
-                        >
-                          <Heart
-                            className={`w-5 h-5 ${
-                              wishlist.includes(product.id)
-                                ? "fill-red-500 text-red-500"
-                                : "text-gray-700"
-                            }`}
-                          />
-                        </button>
-                        <button
-                          onClick={() => setQuickViewProduct(product.id)}
-                          className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors"
-                        >
-                          <Eye className="w-5 h-5 text-gray-700" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Product Info */}
-                    <div className="p-6">
-                      <div className="flex items-center justify-between mb-2">
-                        <Badge variant="outline" className="text-xs">
-                          {product.category}
-                        </Badge>
-                        <div className="flex items-center gap-1">
-                          <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                          <span className="text-sm font-medium">
-                            {product.rating}
-                          </span>
-                          <span className="text-xs text-gray-500">
-                            ({product.reviews})
-                          </span>
-                        </div>
-                      </div>
-
-                      <h3 className="font-bold text-lg text-gray-900 mb-2 group-hover:text-emerald-700 transition-colors">
-                        {product.name}
-                      </h3>
-
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="text-emerald-900 font-bold text-xl">
-                          ₹{product.price}
-                        </span>
-                        {product.originalPrice > product.price && (
-                          <span className="text-gray-500 line-through text-sm">
-                            ₹{product.originalPrice}
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <div className="text-xs text-gray-500">
-                          Origin:{" "}
-                          <span className="font-medium">{product.origin}</span>
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          Stock:{" "}
-                          <span
-                            className={`font-medium ${
-                              product.stock < 10
-                                ? "text-red-600"
-                                : "text-emerald-600"
-                            }`}
-                          >
-                            {product.stock} left
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Add to Cart Button */}
-                      <button
-                        onClick={() => handleAddToCart(product.id)}
-                        className="mt-4 w-full bg-gradient-to-r from-emerald-600 to-emerald-800 text-white py-3 rounded-lg font-semibold hover:from-emerald-700 hover:to-emerald-900 transition-all duration-300 flex items-center justify-center gap-2"
-                      >
-                        <ShoppingCart className="w-5 h-5" />
-                        Add to Cart
-                      </button>
-                    </div>
-                  </div>
+                    product={product}
+                    wishlist={wishlist}
+                    onAddToCart={handleAddToCart}
+                    onAddToWishlist={handleAddToWishlist}
+                    onQuickView={() => setQuickViewProduct(product.id)}
+                  />
                 ))}
               </div>
             ) : (
               // List View
               <div className="space-y-6">
                 {sortedProducts.map((product) => (
-                  <div
+                  <ProductListCard
                     key={product.id}
-                    className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100"
-                  >
-                    <div className="flex flex-col md:flex-row">
-                      <div className="md:w-1/4 relative h-64 md:h-auto">
-                        <Image
-                          src={product.image}
-                          alt={product.name}
-                          fill
-                          className="object-cover rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none"
-                        />
-                      </div>
-                      <div className="md:w-3/4 p-6">
-                        <div className="flex flex-col h-full">
-                          <div className="flex justify-between items-start mb-3">
-                            <div>
-                              <Badge variant="outline" className="mb-2">
-                                {product.category}
-                              </Badge>
-                              <h3 className="text-xl font-bold text-gray-900 mb-2">
-                                {product.name}
-                              </h3>
-                              <div className="flex items-center gap-2 mb-3">
-                                <div className="flex items-center gap-1">
-                                  <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                                  <span className="font-medium">
-                                    {product.rating}
-                                  </span>
-                                  <span className="text-gray-500">
-                                    ({product.reviews} reviews)
-                                  </span>
-                                </div>
-                                <span className="text-gray-400">•</span>
-                                <span className="text-gray-600">
-                                  {product.origin}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <button
-                                onClick={() => handleAddToWishlist(product.id)}
-                                className="p-2 hover:bg-gray-100 rounded-lg"
-                              >
-                                <Heart
-                                  className={`w-5 h-5 ${
-                                    wishlist.includes(product.id)
-                                      ? "fill-red-500 text-red-500"
-                                      : "text-gray-700"
-                                  }`}
-                                />
-                              </button>
-                              <button className="p-2 hover:bg-gray-100 rounded-lg">
-                                <Share2 className="w-5 h-5 text-gray-700" />
-                              </button>
-                            </div>
-                          </div>
-
-                          <p className="text-gray-600 mb-4 flex-grow">
-                            Premium quality {product.name.toLowerCase()} with
-                            exceptional taste and nutritional value. Perfect for
-                            snacking, cooking, or gifting.
-                          </p>
-
-                          <div className="flex items-center justify-between">
-                            <div className="space-y-1">
-                              <div className="flex items-center gap-2">
-                                <span className="text-2xl font-bold text-emerald-900">
-                                  ₹{product.price}
-                                </span>
-                                {product.originalPrice > product.price && (
-                                  <span className="text-gray-500 line-through">
-                                    ₹{product.originalPrice}
-                                  </span>
-                                )}
-                              </div>
-                              <div className="text-sm text-gray-500">
-                                Stock:{" "}
-                                <span
-                                  className={`font-medium ${
-                                    product.stock < 10
-                                      ? "text-red-600"
-                                      : "text-emerald-600"
-                                  }`}
-                                >
-                                  {product.stock} units available
-                                </span>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-4">
-                              <div className="flex items-center border border-gray-300 rounded-lg">
-                                <button
-                                  onClick={() =>
-                                    handleQuantityChange("decrease")
-                                  }
-                                  className="p-2 hover:bg-gray-100"
-                                >
-                                  <Minus className="w-4 h-4" />
-                                </button>
-                                <span className="px-4 py-2">{quantity}</span>
-                                <button
-                                  onClick={() =>
-                                    handleQuantityChange("increase")
-                                  }
-                                  className="p-2 hover:bg-gray-100"
-                                >
-                                  <Plus className="w-4 h-4" />
-                                </button>
-                              </div>
-                              <button
-                                onClick={() => handleAddToCart(product.id)}
-                                className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white rounded-lg font-semibold hover:from-emerald-700 hover:to-emerald-900 transition-all duration-300 flex items-center gap-2"
-                              >
-                                <ShoppingCart className="w-5 h-5" />
-                                Add to Cart
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                    product={product}
+                    wishlist={wishlist}
+                    quantity={quantity}
+                    onAddToCart={handleAddToCart}
+                    onAddToWishlist={handleAddToWishlist}
+                    onQuantityChange={handleQuantityChange}
+                  />
                 ))}
               </div>
             )}
@@ -886,7 +867,10 @@ export default function ProductsPage() {
             {/* Pagination */}
             <div className="flex justify-center mt-12">
               <div className="flex items-center gap-2">
-                <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                <button 
+                  className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  aria-label="Previous page"
+                >
                   Previous
                 </button>
                 {[1, 2, 3, 4, 5].map((num) => (
@@ -897,11 +881,15 @@ export default function ProductsPage() {
                         ? "bg-gradient-to-r from-emerald-600 to-emerald-800 text-white"
                         : "border border-gray-300 hover:bg-gray-50"
                     }`}
+                    aria-label={`Page ${num}`}
                   >
                     {num}
                   </button>
                 ))}
-                <button className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                <button 
+                  className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  aria-label="Next page"
+                >
                   Next
                 </button>
               </div>
@@ -911,276 +899,17 @@ export default function ProductsPage() {
       </section>
 
       {/* FEATURED PRODUCT SHOWCASE */}
-      <section className="container mx-auto px-6 py-24">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-block px-4 py-1 bg-gradient-to-r from-amber-500 to-amber-300 text-white rounded-full text-sm font-semibold mb-4">
-            Featured Product
-          </div>
-          <h2 className="text-4xl font-bold text-gray-900 mb-6">
-            Premium California Almonds
-          </h2>
-          <p className="text-gray-600 text-lg">
-            Our flagship product, carefully selected for exceptional quality
-          </p>
-        </div>
-
-        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-          <div className="grid lg:grid-cols-2">
-            {/* Product Images */}
-            <div className="p-8">
-              <div className="relative h-96 rounded-2xl overflow-hidden mb-4">
-                <Image
-                  src={featuredProduct.images[0]}
-                  alt={featuredProduct.name}
-                  fill
-                  className="object-cover"
-                />
-                <Badge className="absolute top-4 left-4 bg-gradient-to-r from-red-500 to-red-600 text-white border-0">
-                  {featuredProduct.discount}% OFF
-                </Badge>
-              </div>
-              <div className="grid grid-cols-4 gap-4">
-                {featuredProduct.images.slice(1).map((image, index) => (
-                  <div
-                    key={index}
-                    className="relative h-24 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
-                  >
-                    <Image
-                      src={image}
-                      alt={`${featuredProduct.name} ${index + 1}`}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Product Details */}
-            <div className="p-8 lg:p-12">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <Badge variant="outline" className="mb-2">
-                    {featuredProduct.category}
-                  </Badge>
-                  <div className="flex items-center gap-2">
-                    {featuredProduct.tags.map((tag) => (
-                      <Badge
-                        key={tag}
-                        className="bg-amber-100 text-amber-800 hover:bg-amber-100"
-                      >
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => handleAddToWishlist(featuredProduct.id)}
-                    className="p-2 hover:bg-gray-100 rounded-lg"
-                  >
-                    <Heart
-                      className={`w-6 h-6 ${
-                        wishlist.includes(featuredProduct.id)
-                          ? "fill-red-500 text-red-500"
-                          : "text-gray-700"
-                      }`}
-                    />
-                  </button>
-                  <button className="p-2 hover:bg-gray-100 rounded-lg">
-                    <Share2 className="w-6 h-6 text-gray-700" />
-                  </button>
-                </div>
-              </div>
-
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">
-                {featuredProduct.name}
-              </h1>
-
-              <div className="flex items-center gap-3 mb-6">
-                <div className="flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className="w-5 h-5 fill-amber-400 text-amber-400"
-                    />
-                  ))}
-                </div>
-                <span className="font-medium">{featuredProduct.rating}</span>
-                <span className="text-gray-500">
-                  ({featuredProduct.reviews} reviews)
-                </span>
-              </div>
-
-              <p className="text-gray-600 mb-8">
-                {featuredProduct.description}
-              </p>
-
-              {/* Variants */}
-              <div className="mb-8">
-                <h3 className="font-bold text-lg mb-4 text-gray-900">
-                  Select Weight
-                </h3>
-                <RadioGroup
-                  value={selectedVariant}
-                  onValueChange={setSelectedVariant}
-                  className="grid grid-cols-2 md:grid-cols-4 gap-4"
-                >
-                  {featuredProduct.variants.map((variant) => (
-                    <div key={variant.id}>
-                      <RadioGroupItem
-                        value={variant.id}
-                        id={variant.id}
-                        className="peer sr-only"
-                      />
-                      <Label
-                        htmlFor={variant.id}
-                        className={`flex flex-col items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all ${
-                          selectedVariant === variant.id
-                            ? "border-emerald-600 bg-emerald-50"
-                            : "border-gray-300 hover:border-gray-400"
-                        }`}
-                      >
-                        <span className="font-bold text-gray-900">
-                          {variant.label}
-                        </span>
-                        <span className="text-lg font-bold text-emerald-700">
-                          ₹{variant.price}
-                        </span>
-                      </Label>
-                    </div>
-                  ))}
-                </RadioGroup>
-              </div>
-
-              {/* Features */}
-              <div className="mb-8">
-                <h3 className="font-bold text-lg mb-4 text-gray-900">
-                  Key Features
-                </h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {featuredProduct.features.map((feature, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center gap-2 text-sm text-gray-700"
-                    >
-                      <Check className="w-4 h-4 text-emerald-600" />
-                      <span>{feature}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Nutrition Info */}
-              <div className="mb-8">
-                <h3 className="font-bold text-lg mb-4 text-gray-900">
-                  Nutrition Facts (per 100g)
-                </h3>
-                <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
-                  {Object.entries(featuredProduct.nutrition).map(
-                    ([key, value]) => (
-                      <div
-                        key={key}
-                        className="text-center p-3 bg-gray-50 rounded-lg"
-                      >
-                        <div className="text-sm text-gray-600 capitalize">
-                          {key}
-                        </div>
-                        <div className="font-bold text-gray-900">{value}</div>
-                      </div>
-                    )
-                  )}
-                </div>
-              </div>
-
-              {/* Add to Cart Section */}
-              <div className="bg-gradient-to-r from-amber-50 to-emerald-50 rounded-2xl p-6">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                  <div>
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="text-3xl font-bold text-emerald-900">
-                        ₹
-                        {
-                          featuredProduct.variants.find(
-                            (v) => v.id === selectedVariant
-                          )?.price
-                        }
-                      </span>
-                      <span className="text-gray-500 line-through">
-                        ₹{featuredProduct.originalPrice}
-                      </span>
-                      <Badge className="bg-gradient-to-r from-red-500 to-red-600 text-white">
-                        Save {featuredProduct.discount}%
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-gray-600">
-                      Free shipping on orders above ₹999
-                    </p>
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center border border-gray-300 rounded-xl bg-white">
-                      <button
-                        onClick={() => handleQuantityChange("decrease")}
-                        className="p-3 hover:bg-gray-100 rounded-l-xl"
-                      >
-                        <Minus className="w-5 h-5" />
-                      </button>
-                      <span className="px-6 py-3 text-lg font-bold">
-                        {quantity}
-                      </span>
-                      <button
-                        onClick={() => handleQuantityChange("increase")}
-                        className="p-3 hover:bg-gray-100 rounded-r-xl"
-                      >
-                        <Plus className="w-5 h-5" />
-                      </button>
-                    </div>
-                    <button className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white rounded-xl font-bold hover:from-emerald-700 hover:to-emerald-900 transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl">
-                      <ShoppingBag className="w-6 h-6" />
-                      Add to Cart
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Trust Badges */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-                {[
-                  { icon: Truck, text: "Free Shipping", sub: "Above ₹999" },
-                  {
-                    icon: Shield,
-                    text: "Quality Guarantee",
-                    sub: "100% Authentic",
-                  },
-                  {
-                    icon: RefreshCw,
-                    text: "Easy Returns",
-                    sub: "30 Days Policy",
-                  },
-                  {
-                    icon: Package,
-                    text: "Secure Packaging",
-                    sub: "Vacuum Sealed",
-                  },
-                ].map((item, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <div className="p-2 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-lg">
-                      <item.icon className="w-5 h-5 text-white" />
-                    </div>
-                    <div>
-                      <div className="font-medium text-gray-900">
-                        {item.text}
-                      </div>
-                      <div className="text-xs text-gray-500">{item.sub}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <FeaturedProductSection
+        featuredProduct={featuredProduct}
+        selectedVariant={selectedVariant}
+        quantity={quantity}
+        wishlist={wishlist}
+        trustBadges={trustBadges}
+        onVariantChange={setSelectedVariant}
+        onQuantityChange={handleQuantityChange}
+        onAddToWishlist={handleAddToWishlist}
+        onAddToCart={() => handleAddToCart(featuredProduct.id)}
+      />
 
       {/* PRODUCT BENEFITS */}
       <section className="bg-gradient-to-b from-white to-amber-50 py-24">
@@ -1195,72 +924,8 @@ export default function ProductsPage() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                icon: Leaf,
-                title: "100% Natural",
-                description: "No preservatives or artificial additives",
-                color: "from-emerald-500 to-emerald-700",
-              },
-              {
-                icon: Award,
-                title: "Premium Quality",
-                description: "Hand-selected for size and perfection",
-                color: "from-amber-500 to-amber-700",
-              },
-              {
-                icon: Clock,
-                title: "Freshness Locked",
-                description: "Vacuum sealed for maximum freshness",
-                color: "from-emerald-500 to-emerald-700",
-              },
-              {
-                icon: Zap,
-                title: "Energy Boost",
-                description: "Natural source of vitamins and minerals",
-                color: "from-amber-500 to-amber-700",
-              },
-              {
-                icon: Droplets,
-                title: "Low Moisture",
-                description: "Perfectly dried for long shelf life",
-                color: "from-emerald-500 to-emerald-700",
-              },
-              {
-                icon: Scale,
-                title: "Accurate Weight",
-                description: "No short weighing guaranteed",
-                color: "from-amber-500 to-amber-700",
-              },
-              {
-                icon: Shield,
-                title: "Safe & Hygienic",
-                description: "Processed in certified facilities",
-                color: "from-emerald-500 to-emerald-700",
-              },
-              {
-                icon: Truck,
-                title: "Fast Delivery",
-                description: "Shipped within 24 hours",
-                color: "from-amber-500 to-amber-700",
-              },
-            ].map((benefit, index) => (
-              <div
-                key={index}
-                className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-amber-100"
-              >
-                <div
-                  className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 bg-gradient-to-br ${benefit.color} rounded-2xl group-hover:scale-110 transition-transform duration-300`}
-                >
-                  <benefit.icon className="w-6 h-6 text-white" />
-                </div>
-                <div className="pt-8 text-center">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">
-                    {benefit.title}
-                  </h3>
-                  <p className="text-gray-600">{benefit.description}</p>
-                </div>
-              </div>
+            {productBenefits.map((benefit, index) => (
+              <BenefitCard key={index} benefit={benefit} />
             ))}
           </div>
         </div>
@@ -1279,328 +944,17 @@ export default function ProductsPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {relatedProducts.map((product) => (
-            <div
-              key={product.id}
-              className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-emerald-200"
-            >
-              <div className="relative h-48 overflow-hidden">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                {product.discount > 0 && (
-                  <Badge className="absolute top-3 left-3 bg-gradient-to-r from-red-500 to-red-600 text-white border-0">
-                    {product.discount}% OFF
-                  </Badge>
-                )}
-              </div>
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-3">
-                  <Badge variant="outline" className="text-xs">
-                    {product.category}
-                  </Badge>
-                  <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                    <span className="text-sm font-medium">
-                      {product.rating}
-                    </span>
-                  </div>
-                </div>
-                <h3 className="font-bold text-lg text-gray-900 mb-2">
-                  {product.name}
-                </h3>
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-emerald-900 font-bold text-xl">
-                    ₹{product.price}
-                  </span>
-                  {product.originalPrice > product.price && (
-                    <span className="text-gray-500 line-through text-sm">
-                      ₹{product.originalPrice}
-                    </span>
-                  )}
-                </div>
-                <button className="w-full py-3 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white rounded-lg font-semibold hover:from-emerald-700 hover:to-emerald-900 transition-all duration-300">
-                  View Details
-                </button>
-              </div>
-            </div>
+            <RelatedProductCard key={product.id} product={product} />
           ))}
         </div>
       </section>
 
       {/* PRODUCT DETAILS TABS */}
-      <section className="container mx-auto px-6 pb-24">
-        <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
-          <Tabs defaultValue="description" className="w-full">
-            <TabsList className="w-full justify-start border-b p-0 bg-transparent rounded-none">
-              <TabsTrigger
-                value="description"
-                className="px-8 py-4 data-[state=active]:border-b-2 data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-700"
-              >
-                Description
-              </TabsTrigger>
-              <TabsTrigger
-                value="nutrition"
-                className="px-8 py-4 data-[state=active]:border-b-2 data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-700"
-              >
-                Nutrition Facts
-              </TabsTrigger>
-              <TabsTrigger
-                value="reviews"
-                className="px-8 py-4 data-[state=active]:border-b-2 data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-700"
-              >
-                Reviews (1,248)
-              </TabsTrigger>
-              <TabsTrigger
-                value="shipping"
-                className="px-8 py-4 data-[state=active]:border-b-2 data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-700"
-              >
-                Shipping & Returns
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="description" className="p-8">
-              <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-gray-900">
-                  Premium Quality California Almonds
-                </h3>
-                <p className="text-gray-600">
-                  Our Premium California Almonds are sourced directly from
-                  certified organic farms in California's Central Valley, known
-                  for producing the world's finest almonds. Each almond
-                  undergoes a rigorous 27-point quality check to ensure superior
-                  size, color, and texture.
-                </p>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-bold text-lg mb-3 text-gray-900">
-                      Key Features:
-                    </h4>
-                    <ul className="space-y-2">
-                      {featuredProduct.features.map((feature, index) => (
-                        <li key={index} className="flex items-center gap-2">
-                          <Check className="w-5 h-5 text-emerald-600" />
-                          <span className="text-gray-700">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-lg mb-3 text-gray-900">
-                      Storage Instructions:
-                    </h4>
-                    <ul className="space-y-2 text-gray-700">
-                      <li>
-                        • Store in a cool, dry place away from direct sunlight
-                      </li>
-                      <li>• Keep in an airtight container after opening</li>
-                      <li>
-                        • Refrigerate for extended shelf life (up to 2 years)
-                      </li>
-                      <li>• Avoid exposure to moisture</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="nutrition" className="p-8">
-              <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-gray-900">
-                  Nutritional Information
-                </h3>
-                <div className="bg-gray-50 rounded-xl p-6">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="text-left py-3 font-bold text-gray-900">
-                          Nutrient
-                        </th>
-                        <th className="text-right py-3 font-bold text-gray-900">
-                          Per 100g
-                        </th>
-                        <th className="text-right py-3 font-bold text-gray-900">
-                          % Daily Value*
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y">
-                      {[
-                        ["Calories", "579 kcal", "29%"],
-                        ["Protein", "21g", "42%"],
-                        ["Total Fat", "50g", "64%"],
-                        ["Saturated Fat", "3.8g", "19%"],
-                        ["Carbohydrates", "22g", "7%"],
-                        ["Dietary Fiber", "13g", "52%"],
-                        ["Sugars", "4.4g", "9%"],
-                        ["Vitamin E", "25.6mg", "171%"],
-                        ["Magnesium", "268mg", "64%"],
-                      ].map(([nutrient, value, daily], index) => (
-                        <tr key={index}>
-                          <td className="py-3 text-gray-700">{nutrient}</td>
-                          <td className="py-3 text-right font-medium text-gray-900">
-                            {value}
-                          </td>
-                          <td className="py-3 text-right text-emerald-700">
-                            {daily}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  <p className="text-sm text-gray-500 mt-4">
-                    *Percent Daily Values are based on a 2,000 calorie diet.
-                  </p>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="reviews" className="p-8">
-              <div className="space-y-8">
-                <div className="flex items-center gap-8">
-                  <div className="text-center">
-                    <div className="text-5xl font-bold text-gray-900 mb-2">
-                      4.9
-                    </div>
-                    <div className="flex items-center justify-center gap-1 mb-2">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className="w-5 h-5 fill-amber-400 text-amber-400"
-                        />
-                      ))}
-                    </div>
-                    <div className="text-gray-600">1,248 reviews</div>
-                  </div>
-                  <div className="flex-1">
-                    {[5, 4, 3, 2, 1].map((rating) => (
-                      <div
-                        key={rating}
-                        className="flex items-center gap-3 mb-2"
-                      >
-                        <span className="w-10 text-gray-600">
-                          {rating} star
-                        </span>
-                        <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-amber-500"
-                            style={{ width: `${(rating / 5) * 100}%` }}
-                          />
-                        </div>
-                        <span className="w-10 text-gray-600">84%</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Sample Reviews */}
-                <div className="space-y-6">
-                  {[
-                    {
-                      name: "Priya Sharma",
-                      rating: 5,
-                      date: "2 days ago",
-                      comment:
-                        "Exceptional quality! The almonds are fresh, crunchy, and perfectly sized. Will definitely order again.",
-                    },
-                    {
-                      name: "Rajesh Kumar",
-                      rating: 5,
-                      date: "1 week ago",
-                      comment:
-                        "Best almonds I've ever tasted. Premium packaging and fast delivery. Highly recommended!",
-                    },
-                    {
-                      name: "Anita Patel",
-                      rating: 4,
-                      date: "2 weeks ago",
-                      comment:
-                        "Great quality product. Slightly expensive but worth it for the quality.",
-                    },
-                  ].map((review, index) => (
-                    <div key={index} className="border-b pb-6">
-                      <div className="flex items-center justify-between mb-3">
-                        <div>
-                          <div className="font-bold text-gray-900">
-                            {review.name}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            {[...Array(review.rating)].map((_, i) => (
-                              <Star
-                                key={i}
-                                className="w-4 h-4 fill-amber-400 text-amber-400"
-                              />
-                            ))}
-                          </div>
-                        </div>
-                        <span className="text-gray-500 text-sm">
-                          {review.date}
-                        </span>
-                      </div>
-                      <p className="text-gray-700">{review.comment}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="shipping" className="p-8">
-              <div className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-8">
-                  <div>
-                    <h4 className="font-bold text-lg mb-4 text-gray-900">
-                      Shipping Policy
-                    </h4>
-                    <ul className="space-y-3 text-gray-700">
-                      <li className="flex items-center gap-2">
-                        <Check className="w-5 h-5 text-emerald-600" />
-                        <span>Free shipping on orders above ₹999</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <Check className="w-5 h-5 text-emerald-600" />
-                        <span>Same day dispatch for orders before 2 PM</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <Check className="w-5 h-5 text-emerald-600" />
-                        <span>Delivery within 3-7 business days</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <Check className="w-5 h-5 text-emerald-600" />
-                        <span>Real-time tracking available</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-lg mb-4 text-gray-900">
-                      Return Policy
-                    </h4>
-                    <ul className="space-y-3 text-gray-700">
-                      <li className="flex items-center gap-2">
-                        <Check className="w-5 h-5 text-emerald-600" />
-                        <span>30-day return policy</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <Check className="w-5 h-5 text-emerald-600" />
-                        <span>No questions asked return</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <Check className="w-5 h-5 text-emerald-600" />
-                        <span>Free return shipping</span>
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <Check className="w-5 h-5 text-emerald-600" />
-                        <span>Full refund within 7 days</span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
-      </section>
+      <ProductDetailsTabs
+        featuredProduct={featuredProduct}
+        reviews={reviews}
+        renderStars={renderStars}
+      />
 
       {/* FINAL CTA */}
       <section className="container mx-auto px-6 pb-24">
@@ -1615,11 +969,17 @@ export default function ProductsPage() {
               shipping on orders above ₹999.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-8 py-4 bg-white text-emerald-900 rounded-full font-semibold text-lg hover:bg-amber-50 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3">
+              <button 
+                className="px-8 py-4 bg-white text-emerald-900 rounded-full font-semibold text-lg hover:bg-amber-50 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
+                aria-label="Shop all products"
+              >
                 <ShoppingBag className="w-6 h-6" />
                 Shop All Products
               </button>
-              <button className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white/10 hover:scale-105 transition-all duration-300">
+              <button 
+                className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white/10 hover:scale-105 transition-all duration-300"
+                aria-label="View bestsellers"
+              >
                 View Bestsellers
               </button>
             </div>
@@ -1629,3 +989,867 @@ export default function ProductsPage() {
     </main>
   );
 }
+
+// Component interfaces for sub-components
+interface ProductCardProps {
+  product: Product;
+  wishlist: string[];
+  onAddToCart: (productId: string) => void;
+  onAddToWishlist: (productId: string) => void;
+  onQuickView: () => void;
+}
+
+interface ProductListCardProps {
+  product: Product;
+  wishlist: string[];
+  quantity: number;
+  onAddToCart: (productId: string) => void;
+  onAddToWishlist: (productId: string) => void;
+  onQuantityChange: (action: "increase" | "decrease") => void;
+}
+
+interface FeaturedProductSectionProps {
+  featuredProduct: FeaturedProduct;
+  selectedVariant: string;
+  quantity: number;
+  wishlist: string[];
+  trustBadges: TrustBadge[];
+  onVariantChange: (variantId: string) => void;
+  onQuantityChange: (action: "increase" | "decrease") => void;
+  onAddToWishlist: (productId: string) => void;
+  onAddToCart: () => void;
+}
+
+interface BenefitCardProps {
+  benefit: Benefit;
+}
+
+interface RelatedProductCardProps {
+  product: Product;
+}
+
+interface ProductDetailsTabsProps {
+  featuredProduct: FeaturedProduct;
+  reviews: Review[];
+  renderStars: (rating: number) => JSX.Element[];
+}
+
+// Sub-components
+const ProductCard: React.FC<ProductCardProps> = ({
+  product,
+  wishlist,
+  onAddToCart,
+  onAddToWishlist,
+  onQuickView,
+}) => {
+  return (
+    <div className="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-emerald-200">
+      {/* Product Image */}
+      <div className="relative h-64 overflow-hidden">
+        <Image
+          src={product.image}
+          alt={product.name}
+          fill
+          className="object-cover group-hover:scale-110 transition-transform duration-500"
+        />
+        {/* Badges */}
+        <div className="absolute top-4 left-4 flex flex-col gap-2">
+          {product.discount > 0 && (
+            <Badge className="bg-gradient-to-r from-red-500 to-red-600 text-white border-0">
+              {product.discount}% OFF
+            </Badge>
+          )}
+          {product.isNew && (
+            <Badge className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white border-0">
+              NEW
+            </Badge>
+          )}
+        </div>
+        {/* Quick Actions */}
+        <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <button
+            onClick={() => onAddToWishlist(product.id)}
+            className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors"
+            aria-label="Add to wishlist"
+          >
+            <Heart
+              className={`w-5 h-5 ${
+                wishlist.includes(product.id)
+                  ? "fill-red-500 text-red-500"
+                  : "text-gray-700"
+              }`}
+            />
+          </button>
+          <button
+            onClick={onQuickView}
+            className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors"
+            aria-label="Quick view"
+          >
+            <Eye className="w-5 h-5 text-gray-700" />
+          </button>
+        </div>
+      </div>
+
+      {/* Product Info */}
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-2">
+          <Badge variant="outline" className="text-xs">
+            {product.category}
+          </Badge>
+          <div className="flex items-center gap-1">
+            <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+            <span className="text-sm font-medium">{product.rating}</span>
+            <span className="text-xs text-gray-500">({product.reviews})</span>
+          </div>
+        </div>
+
+        <h3 className="font-bold text-lg text-gray-900 mb-2 group-hover:text-emerald-700 transition-colors">
+          {product.name}
+        </h3>
+
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-emerald-900 font-bold text-xl">
+            ₹{product.price}
+          </span>
+          {product.originalPrice > product.price && (
+            <span className="text-gray-500 line-through text-sm">
+              ₹{product.originalPrice}
+            </span>
+          )}
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="text-xs text-gray-500">
+            Origin: <span className="font-medium">{product.origin}</span>
+          </div>
+          <div className="text-xs text-gray-500">
+            Stock:{" "}
+            <span
+              className={`font-medium ${
+                product.stock < 10 ? "text-red-600" : "text-emerald-600"
+              }`}
+            >
+              {product.stock} left
+            </span>
+          </div>
+        </div>
+
+        {/* Add to Cart Button */}
+        <button
+          onClick={() => onAddToCart(product.id)}
+          className="mt-4 w-full bg-gradient-to-r from-emerald-600 to-emerald-800 text-white py-3 rounded-lg font-semibold hover:from-emerald-700 hover:to-emerald-900 transition-all duration-300 flex items-center justify-center gap-2"
+          aria-label={`Add ${product.name} to cart`}
+        >
+          <ShoppingCart className="w-5 h-5" />
+          Add to Cart
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const ProductListCard: React.FC<ProductListCardProps> = ({
+  product,
+  wishlist,
+  quantity,
+  onAddToCart,
+  onAddToWishlist,
+  onQuantityChange,
+}) => {
+  return (
+    <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+      <div className="flex flex-col md:flex-row">
+        <div className="md:w-1/4 relative h-64 md:h-auto">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className="object-cover rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none"
+          />
+        </div>
+        <div className="md:w-3/4 p-6">
+          <div className="flex flex-col h-full">
+            <div className="flex justify-between items-start mb-3">
+              <div>
+                <Badge variant="outline" className="mb-2">
+                  {product.category}
+                </Badge>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  {product.name}
+                </h3>
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="flex items-center gap-1">
+                    <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+                    <span className="font-medium">{product.rating}</span>
+                    <span className="text-gray-500">({product.reviews} reviews)</span>
+                  </div>
+                  <span className="text-gray-400">•</span>
+                  <span className="text-gray-600">{product.origin}</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => onAddToWishlist(product.id)}
+                  className="p-2 hover:bg-gray-100 rounded-lg"
+                  aria-label="Add to wishlist"
+                >
+                  <Heart
+                    className={`w-5 h-5 ${
+                      wishlist.includes(product.id)
+                        ? "fill-red-500 text-red-500"
+                        : "text-gray-700"
+                    }`}
+                  />
+                </button>
+                <button 
+                  className="p-2 hover:bg-gray-100 rounded-lg"
+                  aria-label="Share product"
+                >
+                  <Share2 className="w-5 h-5 text-gray-700" />
+                </button>
+              </div>
+            </div>
+
+            <p className="text-gray-600 mb-4 flex-grow">
+              Premium quality {product.name.toLowerCase()} with exceptional taste
+              and nutritional value. Perfect for snacking, cooking, or gifting.
+            </p>
+
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl font-bold text-emerald-900">
+                    ₹{product.price}
+                  </span>
+                  {product.originalPrice > product.price && (
+                    <span className="text-gray-500 line-through">
+                      ₹{product.originalPrice}
+                    </span>
+                  )}
+                </div>
+                <div className="text-sm text-gray-500">
+                  Stock:{" "}
+                  <span
+                    className={`font-medium ${
+                      product.stock < 10 ? "text-red-600" : "text-emerald-600"
+                    }`}
+                  >
+                    {product.stock} units available
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center border border-gray-300 rounded-lg">
+                  <button
+                    onClick={() => onQuantityChange("decrease")}
+                    className="p-2 hover:bg-gray-100"
+                    aria-label="Decrease quantity"
+                  >
+                    <Minus className="w-4 h-4" />
+                  </button>
+                  <span className="px-4 py-2">{quantity}</span>
+                  <button
+                    onClick={() => onQuantityChange("increase")}
+                    className="p-2 hover:bg-gray-100"
+                    aria-label="Increase quantity"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
+                <button
+                  onClick={() => onAddToCart(product.id)}
+                  className="px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white rounded-lg font-semibold hover:from-emerald-700 hover:to-emerald-900 transition-all duration-300 flex items-center gap-2"
+                  aria-label={`Add ${product.name} to cart`}
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const FeaturedProductSection: React.FC<FeaturedProductSectionProps> = ({
+  featuredProduct,
+  selectedVariant,
+  quantity,
+  wishlist,
+  trustBadges,
+  onVariantChange,
+  onQuantityChange,
+  onAddToWishlist,
+  onAddToCart,
+}) => {
+  const currentVariantPrice = featuredProduct.variants.find(v => v.id === selectedVariant)?.price || featuredProduct.price;
+
+  return (
+    <section className="container mx-auto px-6 py-24">
+      <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="inline-block px-4 py-1 bg-gradient-to-r from-amber-500 to-amber-300 text-white rounded-full text-sm font-semibold mb-4">
+          Featured Product
+        </div>
+        <h2 className="text-4xl font-bold text-gray-900 mb-6">
+          {featuredProduct.name}
+        </h2>
+        <p className="text-gray-600 text-lg">
+          Our flagship product, carefully selected for exceptional quality
+        </p>
+      </div>
+
+      <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
+        <div className="grid lg:grid-cols-2">
+          {/* Product Images */}
+          <div className="p-8">
+            <div className="relative h-96 rounded-2xl overflow-hidden mb-4">
+              <Image
+                src={featuredProduct.images[0]}
+                alt={featuredProduct.name}
+                fill
+                className="object-cover"
+              />
+              <Badge className="absolute top-4 left-4 bg-gradient-to-r from-red-500 to-red-600 text-white border-0">
+                {featuredProduct.discount}% OFF
+              </Badge>
+            </div>
+            <div className="grid grid-cols-4 gap-4">
+              {featuredProduct.images.slice(1).map((image, index) => (
+                <div
+                  key={index}
+                  className="relative h-24 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                >
+                  <Image
+                    src={image}
+                    alt={`${featuredProduct.name} ${index + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Product Details */}
+          <div className="p-8 lg:p-12">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <Badge variant="outline" className="mb-2">
+                  {featuredProduct.category}
+                </Badge>
+                <div className="flex items-center gap-2">
+                  {featuredProduct.tags.map((tag) => (
+                    <Badge
+                      key={tag}
+                      className="bg-amber-100 text-amber-800 hover:bg-amber-100"
+                    >
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => onAddToWishlist(featuredProduct.id)}
+                  className="p-2 hover:bg-gray-100 rounded-lg"
+                  aria-label="Add to wishlist"
+                >
+                  <Heart
+                    className={`w-6 h-6 ${
+                      wishlist.includes(featuredProduct.id)
+                        ? "fill-red-500 text-red-500"
+                        : "text-gray-700"
+                    }`}
+                  />
+                </button>
+                <button 
+                  className="p-2 hover:bg-gray-100 rounded-lg"
+                  aria-label="Share product"
+                >
+                  <Share2 className="w-6 h-6 text-gray-700" />
+                </button>
+              </div>
+            </div>
+
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">
+              {featuredProduct.name}
+            </h1>
+
+            <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className="w-5 h-5 fill-amber-400 text-amber-400"
+                  />
+                ))}
+              </div>
+              <span className="font-medium">{featuredProduct.rating}</span>
+              <span className="text-gray-500">
+                ({featuredProduct.reviews} reviews)
+              </span>
+            </div>
+
+            <p className="text-gray-600 mb-8">{featuredProduct.description}</p>
+
+            {/* Variants */}
+            <div className="mb-8">
+              <h3 className="font-bold text-lg mb-4 text-gray-900">
+                Select Weight
+              </h3>
+              <RadioGroup
+                value={selectedVariant}
+                onValueChange={onVariantChange}
+                className="grid grid-cols-2 md:grid-cols-4 gap-4"
+              >
+                {featuredProduct.variants.map((variant) => (
+                  <div key={variant.id}>
+                    <RadioGroupItem
+                      value={variant.id}
+                      id={variant.id}
+                      className="peer sr-only"
+                    />
+                    <Label
+                      htmlFor={variant.id}
+                      className={`flex flex-col items-center justify-center p-4 border-2 rounded-xl cursor-pointer transition-all ${
+                        selectedVariant === variant.id
+                          ? "border-emerald-600 bg-emerald-50"
+                          : "border-gray-300 hover:border-gray-400"
+                      }`}
+                    >
+                      <span className="font-bold text-gray-900">
+                        {variant.label}
+                      </span>
+                      <span className="text-lg font-bold text-emerald-700">
+                        ₹{variant.price}
+                      </span>
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
+
+            {/* Features */}
+            <div className="mb-8">
+              <h3 className="font-bold text-lg mb-4 text-gray-900">
+                Key Features
+              </h3>
+              <div className="grid grid-cols-2 gap-3">
+                {featuredProduct.features.map((feature, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-2 text-sm text-gray-700"
+                  >
+                    <Check className="w-4 h-4 text-emerald-600" />
+                    <span>{feature}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Nutrition Info */}
+            <div className="mb-8">
+              <h3 className="font-bold text-lg mb-4 text-gray-900">
+                Nutrition Facts (per 100g)
+              </h3>
+              <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
+                {Object.entries(featuredProduct.nutrition).map(
+                  ([key, value]) => (
+                    <div
+                      key={key}
+                      className="text-center p-3 bg-gray-50 rounded-lg"
+                    >
+                      <div className="text-sm text-gray-600 capitalize">
+                        {key}
+                      </div>
+                      <div className="font-bold text-gray-900">{value}</div>
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+
+            {/* Add to Cart Section */}
+            <div className="bg-gradient-to-r from-amber-50 to-emerald-50 rounded-2xl p-6">
+              <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div>
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-3xl font-bold text-emerald-900">
+                      ₹{currentVariantPrice}
+                    </span>
+                    <span className="text-gray-500 line-through">
+                      ₹{featuredProduct.originalPrice}
+                    </span>
+                    <Badge className="bg-gradient-to-r from-red-500 to-red-600 text-white">
+                      Save {featuredProduct.discount}%
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-gray-600">
+                    Free shipping on orders above ₹999
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center border border-gray-300 rounded-xl bg-white">
+                    <button
+                      onClick={() => onQuantityChange("decrease")}
+                      className="p-3 hover:bg-gray-100 rounded-l-xl"
+                      aria-label="Decrease quantity"
+                    >
+                      <Minus className="w-5 h-5" />
+                    </button>
+                    <span className="px-6 py-3 text-lg font-bold">{quantity}</span>
+                    <button
+                      onClick={() => onQuantityChange("increase")}
+                      className="p-3 hover:bg-gray-100 rounded-r-xl"
+                      aria-label="Increase quantity"
+                    >
+                      <Plus className="w-5 h-5" />
+                    </button>
+                  </div>
+                  <button
+                    onClick={onAddToCart}
+                    className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white rounded-xl font-bold hover:from-emerald-700 hover:to-emerald-900 transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl"
+                    aria-label={`Add ${featuredProduct.name} to cart`}
+                  >
+                    <ShoppingBag className="w-6 h-6" />
+                    Add to Cart
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Trust Badges */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+              {trustBadges.map((item, index) => (
+                <div key={index} className="flex items-center gap-3">
+                  <div className="p-2 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-lg">
+                    <item.icon className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-gray-900">{item.text}</div>
+                    <div className="text-xs text-gray-500">{item.sub}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const BenefitCard: React.FC<BenefitCardProps> = ({ benefit }) => {
+  return (
+    <div className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-amber-100">
+      <div
+        className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 bg-gradient-to-br ${benefit.color} rounded-2xl group-hover:scale-110 transition-transform duration-300`}
+      >
+        <benefit.icon className="w-6 h-6 text-white" />
+      </div>
+      <div className="pt-8 text-center">
+        <h3 className="text-xl font-bold text-gray-900 mb-3">
+          {benefit.title}
+        </h3>
+        <p className="text-gray-600">{benefit.description}</p>
+      </div>
+    </div>
+  );
+};
+
+const RelatedProductCard: React.FC<RelatedProductCardProps> = ({ product }) => {
+  return (
+    <div className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-emerald-200">
+      <div className="relative h-48 overflow-hidden">
+        <Image
+          src={product.image}
+          alt={product.name}
+          fill
+          className="object-cover group-hover:scale-110 transition-transform duration-500"
+        />
+        {product.discount > 0 && (
+          <Badge className="absolute top-3 left-3 bg-gradient-to-r from-red-500 to-red-600 text-white border-0">
+            {product.discount}% OFF
+          </Badge>
+        )}
+      </div>
+      <div className="p-6">
+        <div className="flex items-center justify-between mb-3">
+          <Badge variant="outline" className="text-xs">
+            {product.category}
+          </Badge>
+          <div className="flex items-center gap-1">
+            <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
+            <span className="text-sm font-medium">{product.rating}</span>
+          </div>
+        </div>
+        <h3 className="font-bold text-lg text-gray-900 mb-2">
+          {product.name}
+        </h3>
+        <div className="flex items-center gap-2 mb-4">
+          <span className="text-emerald-900 font-bold text-xl">
+            ₹{product.price}
+          </span>
+          {product.originalPrice > product.price && (
+            <span className="text-gray-500 line-through text-sm">
+              ₹{product.originalPrice}
+            </span>
+          )}
+        </div>
+        <button 
+          className="w-full py-3 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white rounded-lg font-semibold hover:from-emerald-700 hover:to-emerald-900 transition-all duration-300"
+          aria-label={`View details of ${product.name}`}
+        >
+          View Details
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const ProductDetailsTabs: React.FC<ProductDetailsTabsProps> = ({
+  featuredProduct,
+  reviews,
+  renderStars,
+}) => {
+  return (
+    <section className="container mx-auto px-6 pb-24">
+      <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
+        <Tabs defaultValue="description" className="w-full">
+          <TabsList className="w-full justify-start border-b p-0 bg-transparent rounded-none">
+            <TabsTrigger
+              value="description"
+              className="px-8 py-4 data-[state=active]:border-b-2 data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-700"
+            >
+              Description
+            </TabsTrigger>
+            <TabsTrigger
+              value="nutrition"
+              className="px-8 py-4 data-[state=active]:border-b-2 data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-700"
+            >
+              Nutrition Facts
+            </TabsTrigger>
+            <TabsTrigger
+              value="reviews"
+              className="px-8 py-4 data-[state=active]:border-b-2 data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-700"
+            >
+              Reviews ({featuredProduct.reviews.toLocaleString()})
+            </TabsTrigger>
+            <TabsTrigger
+              value="shipping"
+              className="px-8 py-4 data-[state=active]:border-b-2 data-[state=active]:border-emerald-600 data-[state=active]:text-emerald-700"
+            >
+              Shipping & Returns
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="description" className="p-8">
+            <div className="space-y-6">
+              <h3 className="text-2xl font-bold text-gray-900">
+                Premium Quality {featuredProduct.name}
+              </h3>
+              <p className="text-gray-600">
+                Our {featuredProduct.name} are sourced directly from certified
+                organic farms in California&apos;s Central Valley, known for
+                producing the world&apos;s finest almonds. Each almond undergoes
+                a rigorous 27-point quality check to ensure superior size,
+                color, and texture.
+              </p>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-bold text-lg mb-3 text-gray-900">
+                    Key Features:
+                  </h4>
+                  <ul className="space-y-2">
+                    {featuredProduct.features.map((feature, index) => (
+                      <li key={index} className="flex items-center gap-2">
+                        <Check className="w-5 h-5 text-emerald-600" />
+                        <span className="text-gray-700">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-bold text-lg mb-3 text-gray-900">
+                    Storage Instructions:
+                  </h4>
+                  <ul className="space-y-2 text-gray-700">
+                    <li>
+                      • Store in a cool, dry place away from direct sunlight
+                    </li>
+                    <li>• Keep in an airtight container after opening</li>
+                    <li>
+                      • Refrigerate for extended shelf life (up to 2 years)
+                    </li>
+                    <li>• Avoid exposure to moisture</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="nutrition" className="p-8">
+            <div className="space-y-6">
+              <h3 className="text-2xl font-bold text-gray-900">
+                Nutritional Information
+              </h3>
+              <div className="bg-gray-50 rounded-xl p-6">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left py-3 font-bold text-gray-900">
+                        Nutrient
+                      </th>
+                      <th className="text-right py-3 font-bold text-gray-900">
+                        Per 100g
+                      </th>
+                      <th className="text-right py-3 font-bold text-gray-900">
+                        % Daily Value*
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y">
+                    {[
+                      ["Calories", "579 kcal", "29%"],
+                      ["Protein", "21g", "42%"],
+                      ["Total Fat", "50g", "64%"],
+                      ["Saturated Fat", "3.8g", "19%"],
+                      ["Carbohydrates", "22g", "7%"],
+                      ["Dietary Fiber", "13g", "52%"],
+                      ["Sugars", "4.4g", "9%"],
+                      ["Vitamin E", "25.6mg", "171%"],
+                      ["Magnesium", "268mg", "64%"],
+                    ].map(([nutrient, value, daily], index) => (
+                      <tr key={index}>
+                        <td className="py-3 text-gray-700">{nutrient}</td>
+                        <td className="py-3 text-right font-medium text-gray-900">
+                          {value}
+                        </td>
+                        <td className="py-3 text-right text-emerald-700">
+                          {daily}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <p className="text-sm text-gray-500 mt-4">
+                  *Percent Daily Values are based on a 2,000 calorie diet.
+                </p>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="reviews" className="p-8">
+            <div className="space-y-8">
+              <div className="flex items-center gap-8">
+                <div className="text-center">
+                  <div className="text-5xl font-bold text-gray-900 mb-2">
+                    {featuredProduct.rating}
+                  </div>
+                  <div className="flex items-center justify-center gap-1 mb-2">
+                    {renderStars(Math.floor(featuredProduct.rating))}
+                  </div>
+                  <div className="text-gray-600">
+                    {featuredProduct.reviews.toLocaleString()} reviews
+                  </div>
+                </div>
+                <div className="flex-1">
+                  {[5, 4, 3, 2, 1].map((rating) => (
+                    <div key={rating} className="flex items-center gap-3 mb-2">
+                      <span className="w-10 text-gray-600">{rating} star</span>
+                      <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-amber-500"
+                          style={{ width: `${(rating / 5) * 100}%` }}
+                        />
+                      </div>
+                      <span className="w-10 text-gray-600">84%</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Sample Reviews */}
+              <div className="space-y-6">
+                {reviews.map((review, index) => (
+                  <div key={index} className="border-b pb-6">
+                    <div className="flex items-center justify-between mb-3">
+                      <div>
+                        <div className="font-bold text-gray-900">
+                          {review.name}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          {renderStars(review.rating)}
+                        </div>
+                      </div>
+                      <span className="text-gray-500 text-sm">
+                        {review.date}
+                      </span>
+                    </div>
+                    <p className="text-gray-700">{review.comment}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="shipping" className="p-8">
+            <div className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-8">
+                <div>
+                  <h4 className="font-bold text-lg mb-4 text-gray-900">
+                    Shipping Policy
+                  </h4>
+                  <ul className="space-y-3 text-gray-700">
+                    <li className="flex items-center gap-2">
+                      <Check className="w-5 h-5 text-emerald-600" />
+                      <span>Free shipping on orders above ₹999</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-5 h-5 text-emerald-600" />
+                      <span>Same day dispatch for orders before 2 PM</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-5 h-5 text-emerald-600" />
+                      <span>Delivery within 3-7 business days</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-5 h-5 text-emerald-600" />
+                      <span>Real-time tracking available</span>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-bold text-lg mb-4 text-gray-900">
+                    Return Policy
+                  </h4>
+                  <ul className="space-y-3 text-gray-700">
+                    <li className="flex items-center gap-2">
+                      <Check className="w-5 h-5 text-emerald-600" />
+                      <span>30-day return policy</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-5 h-5 text-emerald-600" />
+                      <span>No questions asked return</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-5 h-5 text-emerald-600" />
+                      <span>Free return shipping</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-5 h-5 text-emerald-600" />
+                      <span>Full refund within 7 days</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </section>
+  );
+};

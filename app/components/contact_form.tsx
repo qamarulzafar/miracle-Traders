@@ -73,7 +73,7 @@ const ContactFormSection: React.FC = () => {
                 href="/faq"
                 className="flex justify-between items-center text-lg hover:text-gray-200 transition"
               >
-                Frequently Asked Questions
+                kashanFrequently Asked Questions
                 <ChevronRight className="w-6 h-6" />
               </a>
             </div>

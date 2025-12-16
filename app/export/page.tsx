@@ -2,7 +2,6 @@
 
 import React from "react";
 import { useState } from "react";
-import Image from "next/image";
 import {
   Package,
   Globe,
@@ -36,20 +35,81 @@ import {
   Tag,
   Percent,
   Gift,
-  Zap
+  Zap,
+  LucideIcon
 } from "lucide-react";
 
+// Type Definitions
+type ProductType = "export" | "vip" | "premium" | "bulk";
+type CategoryId = "dry-fruits" | "rice" | "masala" | "oil" | "pulses" | "snacks" | "sweets" | "beverages" | "all";
 
+interface Category {
+  id: CategoryId;
+  name: string;
+  count: number;
+  icon: string;
+  color: string;
+}
+
+interface Product {
+  id: number;
+  name: string;
+  category: CategoryId;
+  type: ProductType;
+  grade: string;
+  moq: string;
+  price: string;
+  bulkPrice: string;
+  origin: string;
+  packaging: string;
+  shelfLife: string;
+  certifications: string[];
+  description: string;
+  specs: string[];
+  image: string;
+}
+
+interface ExportCountry {
+  country: string;
+  flag: string;
+  volume: string;
+  growth: string;
+}
+
+interface ExportProcessStep {
+  step: number;
+  title: string;
+  description: string;
+  duration: string;
+  icon: LucideIcon;
+}
+
+interface Certification {
+  name: string;
+  description: string;
+}
+
+interface BusinessBenefit {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  color: string;
+}
+
+interface StatItem {
+  number: string;
+  label: string;
+  icon: LucideIcon;
+  color: string;
+}
 
 export default function ExportBusinessPage() {
-
-
-  const [quantity, setQuantity] = useState({});
-  const [activeTab, setActiveTab] = useState("all");
+  const [quantity, setQuantity] = useState<Record<number, number>>({});
+  const [activeTab, setActiveTab] = useState<ProductType | "all">("all");
   const [expandedProduct, setExpandedProduct] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState<CategoryId>("all");
 
-  const categories = [
+  const categories: Category[] = [
     { id: "dry-fruits", name: "Dry Fruits", count: 28, icon: "🥜", color: "from-amber-500 to-amber-700" },
     { id: "rice", name: "Premium Rice", count: 12, icon: "🍚", color: "from-emerald-500 to-emerald-700" },
     { id: "masala", name: "Spices & Masala", count: 36, icon: "🌶️", color: "from-red-500 to-red-700" },
@@ -60,7 +120,7 @@ export default function ExportBusinessPage() {
     { id: "beverages", name: "Beverages", count: 14, icon: "🥤", color: "from-blue-500 to-blue-700" },
   ];
 
-  const products = [
+  const products: Product[] = [
     {
       id: 1,
       name: "Premium California Almonds",
@@ -199,7 +259,7 @@ export default function ExportBusinessPage() {
     },
   ];
 
-  const exportCountries = [
+  const exportCountries: ExportCountry[] = [
     { country: "USA", flag: "🇺🇸", volume: "1200 MT", growth: "+15%" },
     { country: "UAE", flag: "🇦🇪", volume: "800 MT", growth: "+22%" },
     { country: "UK", flag: "🇬🇧", volume: "650 MT", growth: "+18%" },
@@ -210,7 +270,7 @@ export default function ExportBusinessPage() {
     { country: "Japan", flag: "🇯🇵", volume: "220 MT", growth: "+30%" },
   ];
 
-  const exportProcess = [
+  const exportProcess: ExportProcessStep[] = [
     {
       step: 1,
       title: "Inquiry & Quotation",
@@ -255,7 +315,7 @@ export default function ExportBusinessPage() {
     },
   ];
 
-  const certificationsList = [
+  const certificationsList: Certification[] = [
     { name: "FSSAI", description: "Food Safety and Standards Authority of India" },
     { name: "ISO 22000:2018", description: "Food Safety Management System" },
     { name: "USDA Organic", description: "United States Department of Agriculture" },
@@ -266,6 +326,52 @@ export default function ExportBusinessPage() {
     { name: "Halal", description: "Halal Certification" },
   ];
 
+  const businessBenefits: BusinessBenefit[] = [
+    {
+      icon: Percent,
+      title: "Competitive Pricing",
+      description: "Direct sourcing from farms ensures best prices with volume discounts",
+      color: "from-green-500 to-green-700"
+    },
+    {
+      icon: Zap,
+      title: "Fast Lead Time",
+      description: "30% faster processing with dedicated export documentation team",
+      color: "from-blue-500 to-blue-700"
+    },
+    {
+      icon: Headphones,
+      title: "Dedicated Support",
+      description: "24/7 export manager support with multi-language capabilities",
+      color: "from-purple-500 to-purple-700"
+    },
+    {
+      icon: Gift,
+      title: "Free Samples",
+      description: "Free product samples for quality approval before bulk orders",
+      color: "from-pink-500 to-pink-700"
+    },
+    {
+      icon: RefreshCw,
+      title: "Flexible Payment",
+      description: "Multiple payment options including LC, TT, and credit terms",
+      color: "from-orange-500 to-orange-700"
+    },
+    {
+      icon: BarChart,
+      title: "Market Insights",
+      description: "Regular market analysis and product trend reports",
+      color: "from-indigo-500 to-indigo-700"
+    },
+  ];
+
+  const stats: StatItem[] = [
+    { number: "5000+", label: "Export Clients", icon: Users, color: "text-emerald-600" },
+    { number: "35+", label: "Countries Served", icon: Globe, color: "text-blue-600" },
+    { number: "120+", label: "Products", icon: Package, color: "text-amber-600" },
+    { number: "98%", label: "Client Retention", icon: TrendingUp, color: "text-green-600" },
+  ];
+
   const handleQuoteRequest = (productId: number) => {
     const product = products.find(p => p.id === productId);
     alert(`Quote request sent for ${product?.name}. Our team will contact you within 30 minutes.`);
@@ -274,6 +380,8 @@ export default function ExportBusinessPage() {
   const toggleProductDetails = (productId: string) => {
     setExpandedProduct(expandedProduct === productId ? null : productId);
   };
+
+  const tabLabels: (ProductType | "all")[] = ["all", "vip", "premium", "bulk", "export"];
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white pt-[140px]">
@@ -312,12 +420,7 @@ export default function ExportBusinessPage() {
       {/* STATISTICS */}
       <section className="container mx-auto px-6 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[
-            { number: "5000+", label: "Export Clients", icon: Users, color: "text-emerald-600" },
-            { number: "35+", label: "Countries Served", icon: Globe, color: "text-blue-600" },
-            { number: "120+", label: "Products", icon: Package, color: "text-amber-600" },
-            { number: "98%", label: "Client Retention", icon: TrendingUp, color: "text-green-600" },
-          ].map((stat, index) => (
+          {stats.map((stat, index) => (
             <div key={index} className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
               <div className={`${stat.color} mb-3`}>
                 <stat.icon className="w-8 h-8" />
@@ -366,7 +469,7 @@ export default function ExportBusinessPage() {
                 <p className="text-gray-600 mt-2">Detailed specifications and pricing for bulk orders</p>
               </div>
               <div className="flex gap-2">
-                {["all", "vip", "premium", "bulk", "export"].map((tab) => (
+                {tabLabels.map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
@@ -657,44 +760,7 @@ export default function ExportBusinessPage() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {[
-            {
-              icon: Percent,
-              title: "Competitive Pricing",
-              description: "Direct sourcing from farms ensures best prices with volume discounts",
-              color: "from-green-500 to-green-700"
-            },
-            {
-              icon: Zap,
-              title: "Fast Lead Time",
-              description: "30% faster processing with dedicated export documentation team",
-              color: "from-blue-500 to-blue-700"
-            },
-            {
-              icon: Headphones,
-              title: "Dedicated Support",
-              description: "24/7 export manager support with multi-language capabilities",
-              color: "from-purple-500 to-purple-700"
-            },
-            {
-              icon: Gift,
-              title: "Free Samples",
-              description: "Free product samples for quality approval before bulk orders",
-              color: "from-pink-500 to-pink-700"
-            },
-            {
-              icon: RefreshCw,
-              title: "Flexible Payment",
-              description: "Multiple payment options including LC, TT, and credit terms",
-              color: "from-orange-500 to-orange-700"
-            },
-            {
-              icon: BarChart,
-              title: "Market Insights",
-              description: "Regular market analysis and product trend reports",
-              color: "from-indigo-500 to-indigo-700"
-            },
-          ].map((benefit, index) => (
+          {businessBenefits.map((benefit, index) => (
             <div key={index} className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all hover:-translate-y-2">
               <div className={`w-16 h-16 bg-gradient-to-br ${benefit.color} rounded-2xl flex items-center justify-center mb-6`}>
                 <benefit.icon className="w-8 h-8 text-white" />

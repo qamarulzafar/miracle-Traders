@@ -18,17 +18,62 @@ import {
   Globe,
   Target,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  LucideIcon
 } from "lucide-react";
 import { useState, useCallback, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 
+// Type definitions
+interface Review {
+  text: string;
+  name: string;
+  role: string;
+  rating: number;
+}
+
+interface Stat {
+  number: string;
+  label: string;
+  icon: LucideIcon;
+}
+
+interface Value {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}
+
+interface TeamMember {
+  name: string;
+  role: string;
+  image: string;
+}
+
+interface Certification {
+  name: string;
+  desc: string;
+}
+
+interface ProcessStep {
+  step: string;
+  title: string;
+  desc: string;
+}
+
+interface Feature {
+  icon: LucideIcon;
+  title: string;
+  desc: string;
+  gradient: string;
+}
+
 export default function AboutPage() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 50 });
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [scrollProgress, setScrollProgress] = useState<number>(0);
 
-  const reviews = [
+  const reviews: Review[] = [
     { 
       text: "Excellent quality dry fruits and chocolates! Fresh and flavorful. The packaging and customer service are exceptional.", 
       name: "Roshan Prajwal",
@@ -69,10 +114,9 @@ export default function AboutPage() {
     if (emblaApi) emblaApi.scrollNext();
   }, [emblaApi]);
 
-  const scrollTo = useCallback(
-    (index: number) => emblaApi && emblaApi.scrollTo(index),
-    [emblaApi]
-  );
+  const scrollTo = useCallback((index: number) => {
+    if (emblaApi) emblaApi.scrollTo(index);
+  }, [emblaApi]);
 
   const onScroll = useCallback(() => {
     if (!emblaApi) return;
@@ -86,16 +130,21 @@ export default function AboutPage() {
     onScroll();
     emblaApi.on("scroll", onScroll);
     emblaApi.on("select", onScroll);
+
+    return () => {
+      emblaApi.off("scroll", onScroll);
+      emblaApi.off("select", onScroll);
+    };
   }, [emblaApi, onScroll]);
 
-  const stats = [
+  const stats: Stat[] = [
     { number: "50K+", label: "Happy Customers", icon: Users },
     { number: "8+", label: "Years Experience", icon: Clock },
     { number: "100+", label: "Premium Products", icon: Package },
     { number: "15+", label: "Cities Served", icon: Globe },
   ];
 
-  const values = [
+  const values: Value[] = [
     {
       icon: Leaf,
       title: "Pure & Natural",
@@ -118,18 +167,54 @@ export default function AboutPage() {
     }
   ];
 
-  const team = [
+  const team: TeamMember[] = [
     { name: "Rajesh Kumar", role: "Founder & CEO", image: "/team-1.jpg" },
     { name: "Priya Sharma", role: "Quality Head", image: "/team-2.jpg" },
     { name: "Amit Patel", role: "Sourcing Expert", image: "/team-3.jpg" },
     { name: "Neha Gupta", role: "Customer Relations", image: "/team-4.jpg" },
   ];
 
-  const certifications = [
+  const certifications: Certification[] = [
     { name: "ISO 22000:2018", desc: "Food Safety Management" },
     { name: "USDA Organic", desc: "Organic Certification" },
     { name: "FSSAI Certified", desc: "Food Safety License" },
     { name: "HACCP Certified", desc: "Hazard Analysis" },
+  ];
+
+  const processSteps: ProcessStep[] = [
+    { step: "01", title: "Direct Farm Sourcing", desc: "We partner with certified organic farms across premium growing regions" },
+    { step: "02", title: "Rigorous Testing", desc: "27-point quality check for size, color, moisture, and purity" },
+    { step: "03", title: "Expert Grading", desc: "Hand-sorted by experts into premium, superior, and select grades" },
+    { step: "04", title: "Optimal Storage", desc: "Climate-controlled storage preserving freshness and nutrients" },
+    { step: "05", title: "Premium Packaging", desc: "Vacuum-sealed packaging for maximum shelf life and freshness" },
+    { step: "06", title: "Swift Delivery", desc: "Temperature-controlled logistics ensuring perfect condition delivery" },
+  ];
+
+  const features: Feature[] = [
+    { 
+      icon: BadgeCheck, 
+      title: "Premium Quality", 
+      desc: "100% Quality Guarantee with 27-point checks",
+      gradient: "from-emerald-600 to-emerald-800"
+    },
+    { 
+      icon: Truck, 
+      title: "Swift Delivery", 
+      desc: "Temperature-controlled delivery across India",
+      gradient: "from-amber-500 to-amber-700"
+    },
+    { 
+      icon: RefreshCw, 
+      title: "Easy Returns", 
+      desc: "30-day hassle-free return policy",
+      gradient: "from-emerald-600 to-emerald-800"
+    },
+    { 
+      icon: Headphones, 
+      title: "24/7 Support", 
+      desc: "Dedicated premium customer support",
+      gradient: "from-amber-500 to-amber-700"
+    },
   ];
 
   return (
@@ -160,22 +245,25 @@ export default function AboutPage() {
       {/* STATISTICS BANNER */}
       <section className="container mx-auto px-6 -mt-16 relative z-20">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {stats.map((stat, index) => (
-            <div 
-              key={index}
-              className="bg-white rounded-2xl p-8 shadow-2xl shadow-emerald-900/10 border border-amber-100 hover:scale-105 transition-transform duration-300"
-            >
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl">
-                  <stat.icon className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-emerald-900">{stat.number}</div>
-                  <div className="text-sm text-gray-600">{stat.label}</div>
+          {stats.map((stat, index) => {
+            const Icon = stat.icon;
+            return (
+              <div 
+                key={index}
+                className="bg-white rounded-2xl p-8 shadow-2xl shadow-emerald-900/10 border border-amber-100 hover:scale-105 transition-transform duration-300"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl">
+                    <Icon className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <div className="text-3xl font-bold text-emerald-900">{stat.number}</div>
+                    <div className="text-sm text-gray-600">{stat.label}</div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
@@ -268,26 +356,29 @@ export default function AboutPage() {
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {values.map((value, index) => (
-              <div 
-                key={index}
-                className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-amber-100"
-              >
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                  <div className="p-4 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-2xl group-hover:scale-110 transition-transform duration-300">
-                    <value.icon className="w-6 h-6 text-white" />
+            {values.map((value, index) => {
+              const Icon = value.icon;
+              return (
+                <div 
+                  key={index}
+                  className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-amber-100"
+                >
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <div className="p-4 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-2xl group-hover:scale-110 transition-transform duration-300">
+                      <Icon className="w-6 h-6 text-white" />
+                    </div>
+                  </div>
+                  <div className="pt-8">
+                    <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">
+                      {value.title}
+                    </h3>
+                    <p className="text-gray-600 text-center">
+                      {value.description}
+                    </p>
                   </div>
                 </div>
-                <div className="pt-8">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">
-                    {value.title}
-                  </h3>
-                  <p className="text-gray-600 text-center">
-                    {value.description}
-                  </p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -307,14 +398,7 @@ export default function AboutPage() {
           <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-emerald-400 to-amber-400 hidden md:block" />
           
           <div className="space-y-12">
-            {[
-              { step: "01", title: "Direct Farm Sourcing", desc: "We partner with certified organic farms across premium growing regions" },
-              { step: "02", title: "Rigorous Testing", desc: "27-point quality check for size, color, moisture, and purity" },
-              { step: "03", title: "Expert Grading", desc: "Hand-sorted by experts into premium, superior, and select grades" },
-              { step: "04", title: "Optimal Storage", desc: "Climate-controlled storage preserving freshness and nutrients" },
-              { step: "05", title: "Premium Packaging", desc: "Vacuum-sealed packaging for maximum shelf life and freshness" },
-              { step: "06", title: "Swift Delivery", desc: "Temperature-controlled logistics ensuring perfect condition delivery" },
-            ].map((process, index) => (
+            {processSteps.map((process, index) => (
               <div 
                 key={index}
                 className={`relative flex flex-col md:flex-row items-center gap-8 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
@@ -402,12 +486,14 @@ export default function AboutPage() {
                 <button
                   onClick={scrollPrev}
                   className="p-3 rounded-full bg-white shadow-lg hover:shadow-xl transition-all hover:scale-105 border border-gray-200"
+                  aria-label="Previous testimonial"
                 >
                   <ChevronLeft className="w-5 h-5 text-gray-700" />
                 </button>
                 <button
                   onClick={scrollNext}
                   className="p-3 rounded-full bg-gradient-to-r from-emerald-600 to-emerald-800 text-white shadow-lg hover:shadow-xl transition-all hover:scale-105"
+                  aria-label="Next testimonial"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
@@ -424,6 +510,7 @@ export default function AboutPage() {
                       ? "bg-gradient-to-r from-emerald-600 to-emerald-800 w-8" 
                       : "bg-gray-300 hover:bg-gray-400"
                   }`}
+                  aria-label={`Go to testimonial ${index + 1}`}
                 />
               ))}
             </div>
@@ -524,7 +611,7 @@ export default function AboutPage() {
               <p className="text-white/90 text-xl mb-12 max-w-2xl">
                 Take an exclusive tour of our state-of-the-art facility where quality meets passion
               </p>
-              <button className="group relative">
+              <button className="group relative" aria-label="Watch our story">
                 <div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-amber-300 rounded-full blur-lg group-hover:blur-xl transition-all duration-300" />
                 <div className="relative flex items-center gap-3 bg-gradient-to-r from-amber-500 to-amber-300 text-white px-8 py-4 rounded-full font-semibold text-lg hover:scale-105 transition-transform duration-300">
                   <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -551,49 +638,27 @@ export default function AboutPage() {
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { 
-                icon: BadgeCheck, 
-                title: "Premium Quality", 
-                desc: "100% Quality Guarantee with 27-point checks",
-                gradient: "from-emerald-600 to-emerald-800"
-              },
-              { 
-                icon: Truck, 
-                title: "Swift Delivery", 
-                desc: "Temperature-controlled delivery across India",
-                gradient: "from-amber-500 to-amber-700"
-              },
-              { 
-                icon: RefreshCw, 
-                title: "Easy Returns", 
-                desc: "30-day hassle-free return policy",
-                gradient: "from-emerald-600 to-emerald-800"
-              },
-              { 
-                icon: Headphones, 
-                title: "24/7 Support", 
-                desc: "Dedicated premium customer support",
-                gradient: "from-amber-500 to-amber-700"
-              },
-            ].map((item, index) => (
-              <div 
-                key={index}
-                className="group relative bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-amber-100"
-              >
-                <div className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 bg-gradient-to-br ${item.gradient} rounded-2xl group-hover:scale-110 transition-transform duration-300`}>
-                  <item.icon className="w-8 h-8 text-white" />
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <div 
+                  key={index}
+                  className="group relative bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-amber-100"
+                >
+                  <div className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 bg-gradient-to-br ${feature.gradient} rounded-2xl group-hover:scale-110 transition-transform duration-300`}>
+                    <Icon className="w-8 h-8 text-white" />
+                  </div>
+                  <div className="pt-8 text-center">
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">
+                      {feature.title}
+                    </h3>
+                    <p className="text-gray-600">
+                      {feature.desc}
+                    </p>
+                  </div>
                 </div>
-                <div className="pt-8 text-center">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">
-                    {item.title}
-                  </h3>
-                  <p className="text-gray-600">
-                    {item.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

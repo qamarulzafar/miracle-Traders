@@ -1,701 +1,698 @@
 "use client";
 
+import React from "react";
+import { useState } from "react";
 import Image from "next/image";
-import { 
-  BadgeCheck, 
-  Award, 
-  Shield, 
-  CheckCircle, 
-  Eye, 
-  Microscope,
-  Thermometer,
-  Scale,
-  Droplets,
-  Filter,
+import {
   Package,
+  Globe,
   Truck,
-  Users,
+  CheckCircle,
+  Award,
   Star,
+  TrendingUp,
+  Users,
+  Shield,
+  FileText,
+  Download,
+  Calendar,
+  CreditCard,
+  Headphones,
+  BarChart,
+  Target,
   Leaf,
   Clock,
+  RefreshCw,
+  ChevronDown,
+  ChevronUp,
+  ShoppingCart,
+  MessageSquare,
+  Phone,
+  Mail,
+  MapPin,
+  Factory,
+  Warehouse,
+  Scale,
+  Tag,
+  Percent,
+  Gift,
   Zap,
-  Target,
-  BarChart3,
-  ChevronLeft,
-  ChevronRight,
-  Beaker,
-  TestTube,
-  ShieldCheck,
-  Heart,
-  TruckIcon as TruckIconNew,
-  Globe
+  LucideIcon
 } from "lucide-react";
-import { useState, useCallback, useEffect } from "react";
-import useEmblaCarousel from "embla-carousel-react";
 
-export default function QualityPage() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 50 });
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [scrollProgress, setScrollProgress] = useState(0);
+// Type Definitions
+interface Category {
+  id: string;
+  name: string;
+  count: number;
+  icon: string;
+  color: string;
+}
 
-  const qualityMetrics = [
-    { number: "27", label: "Quality Checks", icon: CheckCircle, suffix: "+" },
-    { number: "100", label: "Parameters Tested", icon: Microscope, suffix: "+" },
-    { number: "99.7", label: "Purity Standard", icon: Award, suffix: "%" },
-    { number: "0", label: "Chemical Residue", icon: Shield, suffix: "%" },
+interface Product {
+  id: number;
+  name: string;
+  category: string;
+  type: "export" | "vip" | "premium" | "bulk";
+  grade: string;
+  moq: string;
+  price: string;
+  bulkPrice: string;
+  origin: string;
+  packaging: string;
+  shelfLife: string;
+  certifications: string[];
+  description: string;
+  specs: string[];
+  image: string;
+}
+
+interface ExportCountry {
+  country: string;
+  flag: string;
+  volume: string;
+  growth: string;
+}
+
+interface ExportProcessStep {
+  step: number;
+  title: string;
+  description: string;
+  duration: string;
+  icon: LucideIcon;
+}
+
+interface Certification {
+  name: string;
+  description: string;
+}
+
+interface StatItem {
+  number: string;
+  label: string;
+  icon: LucideIcon;
+  color: string;
+}
+
+interface BusinessBenefit {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  color: string;
+}
+
+interface QuantityState {
+  [key: number]: number;
+}
+
+export default function ExportBusinessPage() {
+  const [quantity, setQuantity] = useState<QuantityState>({});
+  const [activeTab, setActiveTab] = useState<string>("all");
+  const [expandedProduct, setExpandedProduct] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+
+  const categories: Category[] = [
+    { id: "dry-fruits", name: "Dry Fruits", count: 28, icon: "🥜", color: "from-amber-500 to-amber-700" },
+    { id: "rice", name: "Premium Rice", count: 12, icon: "🍚", color: "from-emerald-500 to-emerald-700" },
+    { id: "masala", name: "Spices & Masala", count: 36, icon: "🌶️", color: "from-red-500 to-red-700" },
+    { id: "oil", name: "Edible Oils", count: 8, icon: "🫒", color: "from-yellow-500 to-yellow-700" },
+    { id: "pulses", name: "Pulses & Lentils", count: 15, icon: "🫘", color: "from-orange-500 to-orange-700" },
+    { id: "snacks", name: "Snacks", count: 22, icon: "🥨", color: "from-purple-500 to-purple-700" },
+    { id: "sweets", name: "Indian Sweets", count: 18, icon: "🍬", color: "from-pink-500 to-pink-700" },
+    { id: "beverages", name: "Beverages", count: 14, icon: "🥤", color: "from-blue-500 to-blue-700" },
   ];
 
-  const scrollPrev = useCallback(() => {
-    if (emblaApi) emblaApi.scrollPrev();
-  }, [emblaApi]);
-
-  const scrollNext = useCallback(() => {
-    if (emblaApi) emblaApi.scrollNext();
-  }, [emblaApi]);
-
-  const scrollTo = useCallback(
-    (index: number) => emblaApi && emblaApi.scrollTo(index),
-    [emblaApi]
-  );
-
-  const onScroll = useCallback(() => {
-    if (!emblaApi) return;
-    const progress = Math.max(0, Math.min(1, emblaApi.scrollProgress()));
-    setScrollProgress(progress * 100);
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-  }, [emblaApi]);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    onScroll();
-    emblaApi.on("scroll", onScroll);
-    emblaApi.on("select", onScroll);
-  }, [emblaApi, onScroll]);
-
-  const qualityStandards = [
+  const products: Product[] = [
     {
-      icon: Microscope,
-      title: "Microbiological Testing",
-      description: "Comprehensive testing for bacteria, yeast, mold, and pathogens",
-      checks: ["E. coli", "Salmonella", "Total Plate Count", "Yeast & Mold"]
+      id: 1,
+      name: "Premium California Almonds",
+      category: "dry-fruits",
+      type: "export",
+      grade: "AAA Premium",
+      moq: "500 kg",
+      price: "$12.5/kg",
+      bulkPrice: "$11.2/kg (1000kg+)",
+      origin: "California, USA",
+      packaging: "25kg Vacuum Pack",
+      shelfLife: "18 months",
+      certifications: ["ISO 22000", "USDA Organic", "HACCP"],
+      description: "Premium California almonds, extra-large size, superior quality with 99% purity",
+      specs: ["Size: 28-30mm", "Moisture: <5%", "Purity: 99%", "Color: Golden Brown"],
+      image: "/products/almonds.jpg"
     },
     {
-      icon: Beaker,
-      title: "Chemical Analysis",
-      description: "Advanced lab testing for chemical composition and purity",
-      checks: ["Pesticide Residue", "Heavy Metals", "Aflatoxins", "Moisture Content"]
+      id: 2,
+      name: "Basmati Rice 1121",
+      category: "rice",
+      type: "vip",
+      grade: "Super Premium",
+      moq: "1000 kg",
+      price: "$3.8/kg",
+      bulkPrice: "$3.4/kg (5000kg+)",
+      origin: "Punjab, India",
+      packaging: "50kg Jute Bags",
+      shelfLife: "24 months",
+      certifications: ["FSSAI", "ISO 9001", "Non-GMO"],
+      description: "Extra-long grain Basmati rice, aged for 1 year, minimum broken grains",
+      specs: ["Grain Length: 8.5mm", "Broken: <2%", "Aroma: Premium", "Cooking Time: 15min"],
+      image: "/products/basmati.jpg"
     },
     {
-      icon: Thermometer,
-      title: "Temperature Control",
-      description: "Maintaining optimal storage conditions throughout the supply chain",
-      checks: ["15-18°C Storage", "Humidity Control", "Real-time Monitoring", "Cold Chain"]
+      id: 3,
+      name: "Kashmiri Saffron (Mongra)",
+      category: "masala",
+      type: "premium",
+      grade: "Grade 1",
+      moq: "100 gm",
+      price: "$85/gm",
+      bulkPrice: "$78/gm (500gm+)",
+      origin: "Kashmir, India",
+      packaging: "1gm, 5gm, 10gm Packs",
+      shelfLife: "36 months",
+      certifications: ["ISO 22000", "Geographical Indication"],
+      description: "Pure Kashmiri Mongra saffron, hand-picked, deep red color with superior aroma",
+      specs: ["Color: Deep Red", "Crocin: >250", "Aroma: Strong", "Moisture: <10%"],
+      image: "/products/saffron.jpg"
     },
     {
-      icon: Scale,
-      title: "Physical Inspection",
-      description: "Manual and automated physical quality assessment",
-      checks: ["Size Grading", "Color Sorting", "Texture Analysis", "Defect Detection"]
-    }
+      id: 4,
+      name: "Extra Virgin Olive Oil",
+      category: "oil",
+      type: "export",
+      grade: "Cold Pressed",
+      moq: "200 liters",
+      price: "$28/liter",
+      bulkPrice: "$25/liter (1000L+)",
+      origin: "Spain",
+      packaging: "1L, 5L, 20L Tins",
+      shelfLife: "24 months",
+      certifications: ["EU Organic", "FDA Approved", "ISO 22000"],
+      description: "First cold-pressed extra virgin olive oil, acidity <0.8%, premium quality",
+      specs: ["Acidity: <0.8%", "Peroxide: <10", "Color: Green Gold", "Smoke Point: 210°C"],
+      image: "/products/olive-oil.jpg"
+    },
+    {
+      id: 5,
+      name: "Toor Dal (Split Pigeon Peas)",
+      category: "pulses",
+      type: "bulk",
+      grade: "Grade A",
+      moq: "2000 kg",
+      price: "$1.8/kg",
+      bulkPrice: "$1.6/kg (10000kg+)",
+      origin: "Maharashtra, India",
+      packaging: "50kg PP Bags",
+      shelfLife: "12 months",
+      certifications: ["FSSAI", "AGMARK"],
+      description: "Premium quality Toor Dal, uniform size, minimal broken, rich in protein",
+      specs: ["Purity: 99.5%", "Moisture: <10%", "Protein: 22%", "Foreign Matter: <0.5%"],
+      image: "/products/toor-dal.jpg"
+    },
+    {
+      id: 6,
+      name: "Premium Cashew W320",
+      category: "dry-fruits",
+      type: "vip",
+      grade: "W320",
+      moq: "300 kg",
+      price: "$18.5/kg",
+      bulkPrice: "$16.8/kg (1000kg+)",
+      origin: "Vietnam",
+      packaging: "25kg Vacuum Pack",
+      shelfLife: "12 months",
+      certifications: ["USDA", "FDA", "ISO 22000"],
+      description: "Whole white cashew nuts, size 320 pieces per pound, premium export quality",
+      specs: ["Size: 320/pound", "Color: White", "Broken: <3%", "Moisture: <5%"],
+      image: "/products/cashew.jpg"
+    },
+    {
+      id: 7,
+      name: "Garam Masala Powder",
+      category: "masala",
+      type: "export",
+      grade: "Premium Blend",
+      moq: "100 kg",
+      price: "$15/kg",
+      bulkPrice: "$13.5/kg (500kg+)",
+      origin: "Rajasthan, India",
+      packaging: "1kg, 5kg, 25kg Packs",
+      shelfLife: "18 months",
+      certifications: ["FSSAI", "ISO 9001", "ISO 22000"],
+      description: "Traditional blend of 12 spices, freshly ground, authentic aroma and flavor",
+      specs: ["Mesh Size: 60", "Moisture: <8%", "Additives: None", "Aroma: Strong"],
+      image: "/products/garam-masala.jpg"
+    },
+    {
+      id: 8,
+      name: "Black Pepper MG1",
+      category: "masala",
+      type: "bulk",
+      grade: "MG1",
+      moq: "500 kg",
+      price: "$9.5/kg",
+      bulkPrice: "$8.5/kg (2000kg+)",
+      origin: "Kerala, India",
+      packaging: "50kg PP Bags",
+      shelfLife: "24 months",
+      certifications: ["ASTA", "ISO 22000"],
+      description: "Malabar Garbled 1 black pepper, bold size, pungency >5%, premium quality",
+      specs: ["Size: >4mm", "Pungency: >5%", "Moisture: <11%", "Light Berries: <2%"],
+      image: "/products/black-pepper.jpg"
+    },
   ];
 
-  const qualityProcess = [
-    {
-      stage: "01",
-      title: "Farm Selection & Audit",
-      description: "Rigorous screening and certification of farming partners",
-      icon: Leaf,
-      details: [
-        "Soil quality testing",
-        "Water source analysis",
-        "Sustainable farming practices",
-        "Organic certification verification"
-      ]
-    },
-    {
-      stage: "02",
-      title: "Harvest Quality Control",
-      description: "Monitoring harvest conditions and initial quality assessment",
-      icon: CheckCircle,
-      details: [
-        "Optimal harvest timing",
-        "Hand-picking standards",
-        "Initial moisture testing",
-        "Immediate post-harvest treatment"
-      ]
-    },
-    {
-      stage: "03",
-      title: "Laboratory Testing",
-      description: "Comprehensive analysis in our ISO-certified labs",
-      icon: TestTube,
-      details: [
-        "27+ parameter testing",
-        "Nutritional analysis",
-        "Purity verification",
-        "Shelf life testing"
-      ]
-    },
-    {
-      stage: "04",
-      title: "Processing Standards",
-      description: "State-of-the-art processing with minimal intervention",
-      icon: Filter,
-      details: [
-        "Chemical-free cleaning",
-        "Low-temperature drying",
-        "UV treatment",
-        "Gentle sorting & grading"
-      ]
-    },
-    {
-      stage: "05",
-      title: "Packaging Excellence",
-      description: "Advanced packaging to preserve freshness and quality",
-      icon: Package,
-      details: [
-        "Vacuum sealing",
-        "Nitrogen flushing",
-        "Light-proof materials",
-        "Tamper-evident seals"
-      ]
-    },
-    {
-      stage: "06",
-      title: "Storage & Distribution",
-      description: "Climate-controlled storage and intelligent logistics",
-      icon: Truck,
-      details: [
-        "Temperature monitoring",
-        "Humidity control",
-        "First-expiry-first-out",
-        "Real-time tracking"
-      ]
-    }
+  const exportCountries: ExportCountry[] = [
+    { country: "USA", flag: "🇺🇸", volume: "1200 MT", growth: "+15%" },
+    { country: "UAE", flag: "🇦🇪", volume: "800 MT", growth: "+22%" },
+    { country: "UK", flag: "🇬🇧", volume: "650 MT", growth: "+18%" },
+    { country: "Canada", flag: "🇨🇦", volume: "450 MT", growth: "+25%" },
+    { country: "Australia", flag: "🇦🇺", volume: "380 MT", growth: "+20%" },
+    { country: "Singapore", flag: "🇸🇬", volume: "320 MT", growth: "+28%" },
+    { country: "Germany", flag: "🇩🇪", volume: "280 MT", growth: "+12%" },
+    { country: "Japan", flag: "🇯🇵", volume: "220 MT", growth: "+30%" },
   ];
 
-  const certifications = [
+  const exportProcess: ExportProcessStep[] = [
     {
-      name: "ISO 22000:2018",
-      desc: "Food Safety Management System",
-      icon: ShieldCheck,
-      validity: "Valid through 2026"
+      step: 1,
+      title: "Inquiry & Quotation",
+      description: "Submit your requirements, receive detailed quotation with pricing, MOQ, and terms",
+      duration: "1-2 hours",
+      icon: MessageSquare
     },
     {
-      name: "USDA Organic",
-      desc: "100% Organic Certification",
-      icon: Leaf,
-      validity: "Annual Renewal"
+      step: 2,
+      title: "Sample Approval",
+      description: "Free samples sent for quality approval and testing",
+      duration: "2-3 days",
+      icon: Package
     },
     {
-      name: "FSSAI License",
-      desc: "Food Safety & Standards Authority of India",
-      icon: ShieldCheck,
-      validity: "Valid through 2025"
+      step: 3,
+      title: "Order Confirmation",
+      description: "Sign contract, make advance payment, order enters production",
+      duration: "1 day",
+      icon: FileText
     },
     {
-      name: "HACCP Certified",
-      desc: "Hazard Analysis Critical Control Point",
-      icon: Target,
-      validity: "Valid through 2026"
+      step: 4,
+      title: "Production & QC",
+      description: "Production with 27 quality checks at different stages",
+      duration: "7-15 days",
+      icon: Factory
     },
     {
-      name: "GMP Certified",
-      desc: "Good Manufacturing Practices",
-      icon: Award,
-      validity: "Valid through 2025"
+      step: 5,
+      title: "Packaging & Labeling",
+      description: "Custom packaging as per destination country requirements",
+      duration: "2-3 days",
+      icon: Warehouse
     },
     {
-      name: "Non-GMO Project",
-      desc: "Verified Non-GMO Products",
-      icon: BadgeCheck,
-      validity: "Annual Verification"
-    }
+      step: 6,
+      title: "Shipping & Tracking",
+      description: "Documentation, customs clearance, real-time tracking",
+      duration: "15-30 days",
+      icon: Truck
+    },
   ];
 
-  const qualityTeam = [
-    {
-      name: "Dr. Priya Sharma",
-      role: "Chief Quality Officer",
-      qualification: "PhD in Food Science",
-      experience: "15+ years",
-      image: "/quality-team-1.jpg"
-    },
-    {
-      name: "Rajesh Kumar",
-      role: "Lab Director",
-      qualification: "MSc in Microbiology",
-      experience: "12+ years",
-      image: "/quality-team-2.jpg"
-    },
-    {
-      name: "Anjali Mehta",
-      role: "Quality Assurance Head",
-      qualification: "MSc in Chemistry",
-      experience: "10+ years",
-      image: "/quality-team-3.jpg"
-    },
-    {
-      name: "Vikram Singh",
-      role: "Supply Chain Quality",
-      qualification: "MBA in Operations",
-      experience: "8+ years",
-      image: "/quality-team-4.jpg"
-    }
+  const certificationsList: Certification[] = [
+    { name: "FSSAI", description: "Food Safety and Standards Authority of India" },
+    { name: "ISO 22000:2018", description: "Food Safety Management System" },
+    { name: "USDA Organic", description: "United States Department of Agriculture" },
+    { name: "HACCP", description: "Hazard Analysis Critical Control Point" },
+    { name: "FDA Approved", description: "Food and Drug Administration (USA)" },
+    { name: "EU Organic", description: "European Union Organic Certification" },
+    { name: "Kosher", description: "Kosher Certification" },
+    { name: "Halal", description: "Halal Certification" },
   ];
 
-  const testimonials = [
-    {
-      text: "The quality consistency is remarkable. Every batch meets the same high standards. Their transparency in quality reports is commendable.",
-      name: "Dr. Anil Kapoor",
-      role: "Nutrition Expert",
-      rating: 5
-    },
-    {
-      text: "As a healthcare professional, I recommend Dry Fruit House for their pure, chemical-free products. The lab reports speak for themselves.",
-      name: "Dr. Sunita Reddy",
-      role: "Clinical Dietitian",
-      rating: 5
-    },
-    {
-      text: "We source premium dry fruits for our 5-star hotel. Dry Fruit House consistently delivers superior quality with complete traceability.",
-      name: "Chef Arvind Patel",
-      role: "Executive Chef",
-      rating: 5
-    }
+  const stats: StatItem[] = [
+    { number: "5000+", label: "Export Clients", icon: Users, color: "text-emerald-600" },
+    { number: "35+", label: "Countries Served", icon: Globe, color: "text-blue-600" },
+    { number: "120+", label: "Products", icon: Package, color: "text-amber-600" },
+    { number: "98%", label: "Client Retention", icon: TrendingUp, color: "text-green-600" },
   ];
 
-  const technology = [
+  const businessBenefits: BusinessBenefit[] = [
     {
-      icon: Microscope,
-      title: "Digital Microscopy",
-      description: "200x magnification for detailed inspection",
-      benefit: "Detects imperfections invisible to naked eye"
+      icon: Percent,
+      title: "Competitive Pricing",
+      description: "Direct sourcing from farms ensures best prices with volume discounts",
+      color: "from-green-500 to-green-700"
     },
     {
       icon: Zap,
-      title: "AI Sorting",
-      description: "Computer vision powered quality sorting",
-      benefit: "99.9% accuracy in defect detection"
+      title: "Fast Lead Time",
+      description: "30% faster processing with dedicated export documentation team",
+      color: "from-blue-500 to-blue-700"
     },
     {
-      icon: Thermometer,
-      title: "IoT Sensors",
-      description: "Real-time temperature & humidity monitoring",
-      benefit: "Continuous quality assurance in storage"
+      icon: Headphones,
+      title: "Dedicated Support",
+      description: "24/7 export manager support with multi-language capabilities",
+      color: "from-purple-500 to-purple-700"
     },
     {
-      icon: BarChart3,
-      title: "Quality Analytics",
-      description: "Predictive analytics for quality trends",
-      benefit: "Proactive quality improvement"
-    }
+      icon: Gift,
+      title: "Free Samples",
+      description: "Free product samples for quality approval before bulk orders",
+      color: "from-pink-500 to-pink-700"
+    },
+    {
+      icon: RefreshCw,
+      title: "Flexible Payment",
+      description: "Multiple payment options including LC, TT, and credit terms",
+      color: "from-orange-500 to-orange-700"
+    },
+    {
+      icon: BarChart,
+      title: "Market Insights",
+      description: "Regular market analysis and product trend reports",
+      color: "from-indigo-500 to-indigo-700"
+    },
   ];
 
+  const handleQuoteRequest = (productId: number): void => {
+    const product = products.find(p => p.id === productId);
+    alert(`Quote request sent for ${product?.name}. Our team will contact you within 30 minutes.`);
+  };
+
+  const toggleProductDetails = (productId: string): void => {
+    setExpandedProduct(expandedProduct === productId ? null : productId);
+  };
+
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white to-emerald-50 pt-[140px]">
-      
+    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white pt-[140px]">
+
       {/* HERO SECTION */}
-      <section className="relative w-full h-[500px] bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-950">
-        <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 container mx-auto px-6 h-full flex flex-col justify-center">
+      <section className="relative bg-gradient-to-r from-emerald-900 via-emerald-800 to-amber-900 py-20">
+        <div className="absolute inset-0 bg-black/20" />
+        <div className="relative container mx-auto px-6">
           <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-emerald-300 text-white px-4 py-2 rounded-full mb-6">
-              <BadgeCheck className="w-4 h-4" />
-              <span className="text-sm font-semibold">Certified Excellence</span>
+            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full mb-6">
+              <Globe className="w-4 h-4" />
+              <span className="text-sm font-semibold">Exporting to 35+ Countries</span>
             </div>
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-              Where Every Kernel Meets
-              <span className="text-emerald-300"> Uncompromising Quality</span>
+              Global Export
+              <span className="text-amber-300"> Excellence</span>
             </h1>
-            <p className="text-xl text-white/90 max-w-2xl">
-              27 quality checks, 100+ parameters tested, and 0% compromise on purity. 
-              Discover the science behind our premium dry fruits.
+            <p className="text-xl text-white/90 max-w-2xl mb-10">
+              Premium quality dry fruits, rice, spices, and food products for global markets.
+              Trusted by 500+ businesses worldwide.
             </p>
+            <div className="flex flex-wrap gap-4">
+              <button className="px-8 py-4 bg-amber-500 text-white rounded-full font-semibold hover:bg-amber-600 transition-all hover:scale-105">
+                <Download className="inline w-5 h-5 mr-2" />
+                Download Export Catalog
+              </button>
+              <button className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-full font-semibold hover:bg-white/10 transition-all">
+                <Phone className="inline w-5 h-5 mr-2" />
+                Contact Export Manager
+              </button>
+            </div>
           </div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent" />
       </section>
 
-      {/* QUALITY METRICS */}
-      <section className="container mx-auto px-6 -mt-16 relative z-20">
+      {/* STATISTICS */}
+      <section className="container mx-auto px-6 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {qualityMetrics.map((metric, index) => (
-            <div 
-              key={index}
-              className="bg-white rounded-2xl p-8 shadow-2xl shadow-emerald-900/10 border border-emerald-100 hover:scale-105 transition-transform duration-300"
-            >
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-xl">
-                  <metric.icon className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-emerald-900">
-                    {metric.number}<span className="text-emerald-600">{metric.suffix}</span>
-                  </div>
-                  <div className="text-sm text-gray-600">{metric.label}</div>
-                </div>
+          {stats.map((stat, index) => (
+            <div key={index} className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+              <div className={`${stat.color} mb-3`}>
+                <stat.icon className="w-8 h-8" />
               </div>
+              <div className="text-3xl font-bold text-gray-900">{stat.number}</div>
+              <div className="text-gray-600 text-sm">{stat.label}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* OUR QUALITY PHILOSOPHY */}
-      <section className="container mx-auto px-6 py-24">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <div className="space-y-8">
-            <div>
-              <div className="inline-block px-4 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm font-semibold mb-4">
-                Our Commitment
+      {/* PRODUCT CATEGORIES */}
+      <section className="container mx-auto px-6 py-16">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Product Categories</h2>
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            Explore our premium range of export-quality products
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setSelectedCategory(cat.id)}
+              className={`p-6 rounded-2xl transition-all duration-300 ${selectedCategory === cat.id || selectedCategory === "all"
+                  ? `bg-gradient-to-r ${cat.color} text-white scale-105`
+                  : "bg-white text-gray-800 hover:bg-gray-50"
+                } shadow-lg border border-gray-100`}
+            >
+              <div className="text-3xl mb-3">{cat.icon}</div>
+              <div className="font-bold mb-1">{cat.name}</div>
+              <div className="text-sm opacity-80">{cat.count} Products</div>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* PRODUCTS TABLE */}
+      <section className="container mx-auto px-6 py-16">
+        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-200">
+          <div className="p-8 border-b border-gray-100">
+            <div className="flex justify-between items-center">
+              <div>
+                <h2 className="text-3xl font-bold text-gray-900">Export Products</h2>
+                <p className="text-gray-600 mt-2">Detailed specifications and pricing for bulk orders</p>
               </div>
-              <h2 className="text-4xl font-bold text-gray-900 mb-6">
-                Quality Is Not Just a Process, It&apos;s Our Promise
-              </h2>
-              <p className="text-gray-600 text-lg leading-relaxed mb-6">
-                At Dry Fruit House, quality is embedded in every step of our journey. 
-                From selecting the perfect soil conditions to the final delivery, 
-                we maintain stringent standards that often exceed global benchmarks.
-              </p>
-              <p className="text-gray-600 text-lg leading-relaxed mb-8">
-                Our quality philosophy is simple: If we won&apos;t serve it to our own families, 
-                it won&apos;t reach yours. This unwavering commitment has earned us the trust 
-                of 50,000+ families across India.
-              </p>
-            </div>
-            
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-emerald-100 rounded-lg">
-                  <Target className="w-6 h-6 text-emerald-700" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-2">Zero Compromise Policy</h3>
-                  <p className="text-gray-600">
-                    We reject 15% of all incoming produce that doesn&apos;t meet our premium standards.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-emerald-100 rounded-lg">
-                  <Eye className="w-6 h-6 text-emerald-700" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-gray-900 mb-2">Complete Transparency</h3>
-                  <p className="text-gray-600">
-                    Access detailed lab reports for every batch with our QR code traceability system.
-                  </p>
-                </div>
+              <div className="flex gap-2">
+                {["all", "vip", "premium", "bulk", "export"].map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`px-4 py-2 rounded-full font-medium capitalize ${activeTab === tab
+                        ? "bg-emerald-600 text-white"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
+                  >
+                    {tab === "vip" ? "VIP" : tab}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
-          
-          <div className="relative">
-            <div className="relative h-[600px] rounded-3xl overflow-hidden shadow-2xl">
-              <Image 
-                src="/quality-lab.jpg" 
-                alt="Quality Testing Laboratory" 
-                fill 
-                className="object-cover"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/40 via-transparent to-transparent" />
-            </div>
-            <div className="absolute -bottom-6 -right-6 bg-white p-8 rounded-2xl shadow-xl max-w-sm">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-full flex items-center justify-center">
-                  <ShieldCheck className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <div className="font-bold text-gray-900">ISO Certified Labs</div>
-                  <div className="text-sm text-gray-600">27+ Parameter Testing</div>
-                </div>
-              </div>
-              <p className="text-gray-600">
-                Every product batch undergoes comprehensive testing in our state-of-the-art laboratories.
-              </p>
-            </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="p-6 text-left font-bold text-gray-700">Product</th>
+                  <th className="p-6 text-left font-bold text-gray-700">Grade</th>
+                  <th className="p-6 text-left font-bold text-gray-700">MOQ</th>
+                  <th className="p-6 text-left font-bold text-gray-700">Price</th>
+                  <th className="p-6 text-left font-bold text-gray-700">Origin</th>
+                  <th className="p-6 text-left font-bold text-gray-700">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products
+                  .filter(
+                    (p) =>
+                      (selectedCategory === "all" || p.category === selectedCategory) &&
+                      (activeTab === "all" || p.type === activeTab)
+                  )
+                  .map((product) => (
+                    <React.Fragment key={product.id}>
+                      {/* MAIN PRODUCT ROW */}
+                      <tr className="border-t border-gray-100 hover:bg-gray-50/50">
+                        <td className="p-6">
+                          <div className="flex items-center gap-4">
+                            <div className="w-16 h-16 bg-gradient-to-br from-emerald-100 to-amber-100 rounded-xl flex items-center justify-center">
+                              <Package className="w-8 h-8 text-emerald-600" />
+                            </div>
+                            <div>
+                              <div className="font-bold text-gray-900">{product.name}</div>
+
+                              <div className="text-sm text-gray-600 flex items-center gap-2 mt-1">
+                                <span
+                                  className={`px-2 py-1 rounded-full text-xs font-medium ${product.type === "vip"
+                                      ? "bg-purple-100 text-purple-700"
+                                      : product.type === "premium"
+                                        ? "bg-amber-100 text-amber-700"
+                                        : "bg-blue-100 text-blue-700"
+                                    }`}
+                                >
+                                  {product.type.toUpperCase()}
+                                </span>
+                                <span className="text-gray-500">{product.category}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+
+                        <td className="p-6">
+                          <div className="flex items-center gap-2">
+                            <Award className="w-4 h-4 text-amber-500" />
+                            <span className="font-medium">{product.grade}</span>
+                          </div>
+                        </td>
+
+                        <td className="p-6 font-medium">{product.moq}</td>
+
+                        <td className="p-6">
+                          <div className="font-bold text-emerald-700">{product.price}</div>
+                          <div className="text-sm text-gray-600">{product.bulkPrice}</div>
+                        </td>
+
+                        <td className="p-6">
+                          <div className="flex items-center gap-2">
+                            <Globe className="w-4 h-4 text-blue-500" />
+                            <span>{product.origin}</span>
+                          </div>
+                        </td>
+
+                        <td className="p-6">
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => handleQuoteRequest(product.id)}
+                              className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white rounded-lg font-medium hover:opacity-90 transition-all"
+                            >
+                              Get Quote
+                            </button>
+
+                            <button
+                              onClick={() =>
+                                toggleProductDetails(product.id.toString())
+                              }
+                              className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
+                            >
+                              {expandedProduct === product.id.toString() ? (
+                                <ChevronUp className="w-5 h-5" />
+                              ) : (
+                                <ChevronDown className="w-5 h-5" />
+                              )}
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+
+                      {/* EXPANDED DETAILS ROW */}
+                      {expandedProduct === product.id.toString() && (
+                        <tr className="bg-gradient-to-r from-gray-50/50 to-white">
+                          <td colSpan={6} className="p-6">
+                            <div className="grid md:grid-cols-2 gap-8">
+                              {/* LEFT SIDE */}
+                              <div>
+                                <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                  <FileText className="w-5 h-5" />
+                                  Product Specifications
+                                </h4>
+
+                                <ul className="space-y-2">
+                                  {product.specs.map((spec, idx) => (
+                                    <li
+                                      key={idx}
+                                      className="flex items-center gap-2 text-gray-700"
+                                    >
+                                      <CheckCircle className="w-4 h-4 text-emerald-500" />
+                                      {spec}
+                                    </li>
+                                  ))}
+                                </ul>
+
+                                <div className="mt-6">
+                                  <h4 className="font-bold text-gray-900 mb-3">
+                                    Certifications
+                                  </h4>
+                                  <div className="flex flex-wrap gap-2">
+                                    {product.certifications.map((cert, idx) => (
+                                      <span
+                                        key={idx}
+                                        className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm"
+                                      >
+                                        {cert}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* RIGHT SIDE */}
+                              <div>
+                                <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                  <Package className="w-5 h-5" />
+                                  Packaging & Details
+                                </h4>
+
+                                <div className="space-y-4">
+                                  <div>
+                                    <div className="text-sm text-gray-600">Packaging</div>
+                                    <div className="font-medium">{product.packaging}</div>
+                                  </div>
+
+                                  <div>
+                                    <div className="text-sm text-gray-600">Shelf Life</div>
+                                    <div className="font-medium">{product.shelfLife}</div>
+                                  </div>
+
+                                  <div>
+                                    <div className="text-sm text-gray-600">Description</div>
+                                    <div className="text-gray-700 mt-1">
+                                      {product.description}
+                                    </div>
+                                  </div>
+
+                                  <button className="mt-4 w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg font-semibold hover:opacity-90 transition-all">
+                                    <ShoppingCart className="inline w-5 h-5 mr-2" />
+                                    Add to Inquiry List
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  ))}
+              </tbody>
+
+            </table>
           </div>
         </div>
       </section>
 
-      {/* QUALITY STANDARDS */}
-      <section className="bg-gradient-to-b from-white to-emerald-50 py-24">
+      {/* EXPORT PROCESS */}
+      <section className="bg-gradient-to-b from-gray-50 to-white py-20">
         <div className="container mx-auto px-6">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-block px-4 py-1 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white rounded-full text-sm font-semibold mb-4">
-              Testing Standards
-            </div>
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Comprehensive Quality Testing
-            </h2>
-            <p className="text-gray-600 text-lg">
-              Our multi-layered testing approach ensures every product meets the highest standards
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Export Process</h2>
+            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+              Seamless export experience from inquiry to delivery
             </p>
           </div>
-          
-          <div className="grid md:grid-cols-2 gap-8">
-            {qualityStandards.map((standard, index) => (
-              <div 
-                key={index}
-                className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-emerald-100"
-              >
-                <div className="flex items-start gap-6">
-                  <div className="p-4 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-2xl group-hover:scale-110 transition-transform duration-300">
-                    <standard.icon className="w-8 h-8 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-900 mb-3">
-                      {standard.title}
-                    </h3>
-                    <p className="text-gray-600 mb-4">
-                      {standard.description}
-                    </p>
-                    <div className="space-y-2">
-                      {standard.checks.map((check, idx) => (
-                        <div key={idx} className="flex items-center gap-2">
-                          <CheckCircle className="w-4 h-4 text-emerald-600" />
-                          <span className="text-sm text-gray-700">{check}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* QUALITY PROCESS TIMELINE */}
-      <section className="container mx-auto px-6 py-24">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6">
-            Our 6-Stage Quality Process
-          </h2>
-          <p className="text-gray-600 text-lg">
-            From farm to your home, quality is monitored at every step
-          </p>
-        </div>
-        
-        <div className="relative">
-          {/* Timeline line for desktop */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-emerald-400 to-emerald-600 hidden lg:block" />
-          
-          <div className="space-y-12 lg:space-y-24">
-            {qualityProcess.map((process, index) => (
-              <div 
-                key={index}
-                className={`relative flex flex-col lg:flex-row items-center gap-8 ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}
-              >
-                {/* Timeline node */}
-                <div className="absolute left-1/2 transform -translate-x-1/2 lg:left-1/2 lg:-translate-x-1/2 w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-full flex items-center justify-center z-10">
-                  <span className="text-white font-bold text-sm">{process.stage}</span>
-                </div>
-                
-                <div className={`lg:w-1/2 ${index % 2 === 0 ? 'lg:pr-12' : 'lg:pl-12'} ${index % 2 === 0 ? 'lg:text-right' : ''} mt-6 lg:mt-0`}>
-                  <div className="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-shadow duration-300 border border-emerald-100">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="p-3 bg-emerald-100 rounded-xl">
-                        <process.icon className="w-6 h-6 text-emerald-700" />
-                      </div>
-                      <h3 className="text-2xl font-bold text-gray-900">{process.title}</h3>
-                    </div>
-                    <p className="text-gray-600 mb-6">
-                      {process.description}
-                    </p>
-                    <ul className="space-y-2">
-                      {process.details.map((detail, idx) => (
-                        <li key={idx} className="flex items-center gap-2 text-gray-700">
-                          <CheckCircle className="w-4 h-4 text-emerald-600" />
-                          {detail}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-                
-                {/* Empty div for spacing on the other side */}
-                <div className="lg:w-1/2 hidden lg:block" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+          <div className="relative">
+            <div className="absolute left-0 right-0 top-1/2 h-0.5 bg-gradient-to-r from-emerald-400 to-amber-400 transform -translate-y-1/2 hidden lg:block" />
 
-      {/* CERTIFICATIONS GRID */}
-      <section className="bg-gradient-to-b from-emerald-50 to-white py-24">
-        <div className="container mx-auto px-6">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-block px-4 py-1 bg-gradient-to-r from-emerald-100 to-emerald-200 text-emerald-800 rounded-full text-sm font-semibold mb-4">
-              Certifications
-            </div>
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Internationally Recognized Standards
-            </h2>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {certifications.map((cert, index) => (
-              <div 
-                key={index}
-                className="group bg-white rounded-2xl p-8 border border-emerald-200 hover:border-emerald-300 transition-all duration-300 hover:scale-105"
-              >
-                <div className="flex items-start gap-6">
-                  <div className="p-4 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-2xl">
-                    <cert.icon className="w-8 h-8 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">
-                      {cert.name}
-                    </h3>
-                    <p className="text-gray-600 mb-3">
-                      {cert.desc}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-emerald-700 font-medium">
-                        {cert.validity}
-                      </span>
-                      <BadgeCheck className="w-5 h-5 text-emerald-600" />
+            <div className="grid lg:grid-cols-6 gap-8">
+              {exportProcess.map((step) => (
+                <div key={step.step} className="relative">
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+                    <div className="w-16 h-16 bg-gradient-to-r from-emerald-600 to-emerald-800 rounded-2xl flex items-center justify-center shadow-xl">
+                      <step.icon className="w-8 h-8 text-white" />
                     </div>
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* TECHNOLOGY & INNOVATION */}
-      <section className="container mx-auto px-6 py-24">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6">
-            Technology-Driven Quality Assurance
-          </h2>
-          <p className="text-gray-600 text-lg">
-            Leveraging cutting-edge technology to maintain consistent quality
-          </p>
-        </div>
-        
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {technology.map((tech, index) => (
-            <div 
-              key={index}
-              className="group relative bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
-            >
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                <div className="p-5 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-2xl group-hover:scale-110 transition-transform duration-300">
-                  <tech.icon className="w-8 h-8 text-white" />
-                </div>
-              </div>
-              <div className="pt-12 text-center">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  {tech.title}
-                </h3>
-                <p className="text-gray-600 mb-3">
-                  {tech.description}
-                </p>
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 rounded-full">
-                  <span className="text-sm font-medium text-emerald-700">
-                    {tech.benefit}
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* QUALITY TEAM */}
-      <section className="bg-gradient-to-b from-white to-emerald-50 py-24">
-        <div className="container mx-auto px-6">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <div className="inline-block px-4 py-1 bg-gradient-to-r from-emerald-600 to-emerald-800 text-white rounded-full text-sm font-semibold mb-4">
-              Our Experts
-            </div>
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              Meet Our Quality Guardians
-            </h2>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {qualityTeam.map((member, index) => (
-              <div 
-                key={index}
-                className="group relative bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
-              >
-                <div className="relative h-64">
-                  <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/30 to-transparent z-10" />
-                  <Image 
-                    src={member.image}
-                    alt={member.name}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-1">
-                    {member.name}
-                  </h3>
-                  <p className="text-emerald-600 font-semibold mb-2">
-                    {member.role}
-                  </p>
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <Award className="w-4 h-4" />
-                      {member.qualification}
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <Clock className="w-4 h-4" />
-                      {member.experience} experience
-                    </div>
-                  </div>
-                  <div className="pt-4 border-t">
-                    <div className="flex items-center gap-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-emerald-400 text-emerald-400" />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* TESTIMONIALS - Enhanced */}
-      <section className="container mx-auto px-6 py-24">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6">
-            Trusted by Experts
-          </h2>
-          <p className="text-gray-600 text-lg">
-            What healthcare professionals and industry experts say about our quality standards
-          </p>
-        </div>
-        
-        <div className="relative">
-          <div className="overflow-hidden rounded-3xl" ref={emblaRef}>
-            <div className="flex">
-              {testimonials.map((item, index) => (
-                <div key={index} className="flex-none w-full md:w-1/2 lg:w-1/3 px-4">
-                  <div className="bg-gradient-to-br from-white to-emerald-50 rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-shadow duration-300 h-full border border-emerald-100">
-                    <div className="flex items-center gap-1 mb-4">
-                      {[...Array(item.rating)].map((_, i) => (
-                        <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
-                      ))}
-                    </div>
-                    <p className="text-gray-700 text-lg italic mb-6">
-                      &ldquo;{item.text}&rdquo;
-                    </p>
-                    <div className="flex items-center gap-4 pt-6 border-t border-emerald-100">
-                      <div className="w-12 h-12 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-full flex items-center justify-center text-white font-bold">
-                        {item.name.charAt(0)}
-                      </div>
-                      <div>
-                        <div className="font-bold text-gray-900">{item.name}</div>
-                        <div className="text-sm text-gray-600">{item.role}</div>
+                  <div className="pt-12 bg-white rounded-2xl p-6 shadow-lg border border-gray-100 mt-8 h-full">
+                    <div className="text-center mb-4">
+                      <div className="text-sm font-semibold text-emerald-600 mb-2">Step {step.step}</div>
+                      <h3 className="font-bold text-gray-900 text-lg mb-3">{step.title}</h3>
+                      <p className="text-gray-600 text-sm mb-4">{step.description}</p>
+                      <div className="inline-flex items-center gap-1 text-sm text-gray-500">
+                        <Clock className="w-4 h-4" />
+                        {step.duration}
                       </div>
                     </div>
                   </div>
@@ -703,83 +700,130 @@ export default function QualityPage() {
               ))}
             </div>
           </div>
-          
-          <div className="flex justify-between items-center mt-12">
-            <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-gradient-to-r from-emerald-600 to-emerald-800 transition-all duration-300"
-                style={{ width: `${scrollProgress}%` }}
-              />
+        </div>
+      </section>
+
+      {/* EXPORT DESTINATIONS */}
+      <section className="container mx-auto px-6 py-20">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Global Export Network</h2>
+          <p className="text-gray-600 text-lg">Serving clients across 35+ countries</p>
+        </div>
+
+        <div className="grid md:grid-cols-4 gap-6 mb-12">
+          {exportCountries.map((country) => (
+            <div key={country.country} className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all hover:-translate-y-1">
+              <div className="flex items-center justify-between mb-4">
+                <div className="text-2xl">{country.flag}</div>
+                <div className={`px-3 py-1 rounded-full text-sm font-medium ${country.growth.startsWith('+')
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-red-100 text-red-700'
+                  }`}>
+                  {country.growth}
+                </div>
+              </div>
+              <div className="font-bold text-gray-900 text-lg mb-1">{country.country}</div>
+              <div className="text-gray-600 text-sm">Annual Volume</div>
+              <div className="text-2xl font-bold text-emerald-700">{country.volume}</div>
             </div>
-            
-            <div className="flex gap-3">
-              <button
-                onClick={scrollPrev}
-                className="p-3 rounded-full bg-white shadow-lg hover:shadow-xl transition-all hover:scale-105 border border-gray-200"
-              >
-                <ChevronLeft className="w-5 h-5 text-gray-700" />
-              </button>
-              <button
-                onClick={scrollNext}
-                className="p-3 rounded-full bg-gradient-to-r from-emerald-600 to-emerald-800 text-white shadow-lg hover:shadow-xl transition-all hover:scale-105"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CERTIFICATIONS */}
+      <section className="bg-gradient-to-r from-emerald-50 to-amber-50 py-20">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Certifications & Compliance</h2>
+            <p className="text-gray-600 text-lg">Meeting global quality and safety standards</p>
           </div>
-          
-          <div className="flex justify-center mt-8 space-x-2">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => scrollTo(index)}
-                className={`w-3 h-3 rounded-full transition-all ${
-                  selectedIndex === index 
-                    ? "bg-gradient-to-r from-emerald-600 to-emerald-800 w-8" 
-                    : "bg-gray-300 hover:bg-gray-400"
-                }`}
-              />
+
+          <div className="grid md:grid-cols-4 gap-6">
+            {certificationsList.map((cert) => (
+              <div key={cert.name} className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+                <div className="w-16 h-16 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <Shield className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-center text-gray-900 mb-2">{cert.name}</h3>
+                <p className="text-gray-600 text-center text-sm">{cert.description}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* QUALITY ASSURANCE CTA */}
-      <section className="container mx-auto px-6 py-24">
+      {/* BUSINESS BENEFITS */}
+      <section className="container mx-auto px-6 py-20">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Partner With Us?</h2>
+          <p className="text-gray-600 text-lg">Premium benefits for our business partners</p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {businessBenefits.map((benefit, index) => (
+            <div key={index} className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all hover:-translate-y-2">
+              <div className={`w-16 h-16 bg-gradient-to-br ${benefit.color} rounded-2xl flex items-center justify-center mb-6`}>
+                <benefit.icon className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">{benefit.title}</h3>
+              <p className="text-gray-600">{benefit.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA SECTION */}
+      <section className="container mx-auto px-6 py-20">
         <div className="relative rounded-3xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-900 via-emerald-800 to-emerald-950" />
-          <div className="relative z-10 p-12 md:p-16 text-center">
-            <div className="inline-block p-4 bg-white/10 backdrop-blur-sm rounded-2xl mb-8">
-              <ShieldCheck className="w-12 h-12 text-white mx-auto" />
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Experience Assured Quality
-            </h2>
-            <p className="text-white/90 text-xl mb-10 max-w-2xl mx-auto">
-              Every product comes with detailed quality reports and complete traceability. 
-              Scan the QR code to view the journey of your dry fruits.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-8 py-4 bg-white text-emerald-900 rounded-full font-semibold text-lg hover:bg-emerald-50 hover:scale-105 transition-all duration-300">
-                Download Quality Reports
-              </button>
-              <button className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white/10 hover:scale-105 transition-all duration-300">
-                Request Lab Analysis
-              </button>
-            </div>
-            <div className="mt-12 pt-8 border-t border-white/20">
-              <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-white mb-2">24/7</div>
-                  <div className="text-white/80">Quality Monitoring</div>
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-900 via-emerald-800 to-amber-900" />
+          <div className="relative z-10 p-12 md:p-16">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                  Start Your Export Journey Today
+                </h2>
+                <p className="text-white/90 text-lg mb-8">
+                  Join 5000+ satisfied business clients worldwide. Get customized quotes,
+                  samples, and expert guidance for your export requirements.
+                </p>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3 text-white">
+                    <CheckCircle className="w-5 h-5 text-amber-300" />
+                    <span>Free product samples</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-white">
+                    <CheckCircle className="w-5 h-5 text-amber-300" />
+                    <span>Competitive FOB/CIF prices</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-white">
+                    <CheckCircle className="w-5 h-5 text-amber-300" />
+                    <span>End-to-end export documentation</span>
+                  </div>
                 </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-white mb-2">100%</div>
-                  <div className="text-white/80">Traceability</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-white mb-2">30-Day</div>
-                  <div className="text-white/80">Freshness Guarantee</div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                <h3 className="text-2xl font-bold text-white mb-6">Request Export Catalog</h3>
+                <div className="space-y-4">
+                  <input
+                    type="email"
+                    placeholder="Your business email"
+                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-amber-300"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Company name"
+                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-amber-300"
+                  />
+                  <select className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-amber-300">
+                    <option value="">Select product interest</option>
+                    <option value="dry-fruits">Dry Fruits</option>
+                    <option value="rice">Rice</option>
+                    <option value="spices">Spices</option>
+                    <option value="all">All Products</option>
+                  </select>
+                  <button className="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg font-bold hover:opacity-90 transition-all">
+                    Download Full Catalog
+                  </button>
                 </div>
               </div>
             </div>
@@ -787,6 +831,37 @@ export default function QualityPage() {
         </div>
       </section>
 
+      {/* CONTACT INFO */}
+      <section className="container mx-auto px-6 py-16">
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-2xl p-8 text-white">
+            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6">
+              <Phone className="w-8 h-8" />
+            </div>
+            <h3 className="text-xl font-bold mb-3">Export Sales</h3>
+            <div className="text-2xl font-bold mb-2">+91 98765 43210</div>
+            <p className="opacity-90">24/7 dedicated export helpline</p>
+          </div>
+
+          <div className="bg-gradient-to-br from-amber-600 to-amber-800 rounded-2xl p-8 text-white">
+            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6">
+              <Mail className="w-8 h-8" />
+            </div>
+            <h3 className="text-xl font-bold mb-3">Email</h3>
+            <div className="text-2xl font-bold mb-2">export@dryfruithouse.com</div>
+            <p className="opacity-90">Response within 2 hours</p>
+          </div>
+
+          <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl p-8 text-white">
+            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6">
+              <MapPin className="w-8 h-8" />
+            </div>
+            <h3 className="text-xl font-bold mb-3">Export Office</h3>
+            <div className="text-2xl font-bold mb-2">Bangalore, India</div>
+            <p className="opacity-90">HSR Layout, Sector 7</p>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

@@ -1,12 +1,12 @@
 import Image from "next/image";
 import { Leaf, Mail, MapPin, Phone, ShieldCheck, Truck } from "lucide-react";
 import ContactFormSection from "../components/contact_form";
-import contactimg from "../../public/images/dry_fruit_contact_sec.webp"
+import contactimg from "../../public/images/dry_fruit_contact_sec.webp";
+import { JSX } from "react";
 
-export default function Home() {
+export default function Home(): JSX.Element {
   return (
     <main className="min-h-screen mt-20 bg-white text-black p-6 pt-32">
-
       {/* HERO SECTION */}
       <section className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
         <div>
@@ -18,21 +18,26 @@ export default function Home() {
             Export quality products with guaranteed freshness.
           </p>
 
-         <div className="mt-6 space-y-3 text-gray-800">
-        <p className="flex items-center gap-2">
-       <MapPin size={20} stroke="black" fill="none" /> 
-           <strong>Address:</strong> Karachi, Pakistan
-          </p>
-          <p className="flex items-center gap-2">
-          <Phone size={20} stroke="black" fill="none" /> 
-            <strong>Phone:</strong> 03212076322
-          </p>
-          <p className="flex items-center gap-2">
-          <Mail size={20} stroke="black" fill="none" /> 
-             <strong>Email:</strong> yourbrand@example.com
-              </p>
-           </div> 
-          <button className="mt-6 px-6 py-3 bg-green-700 text-white rounded-xl text-lg hover:bg-green-800 transition">
+          <div className="mt-6 space-y-3 text-gray-800">
+            <p className="flex items-center gap-2">
+              <MapPin size={20} stroke="black" fill="none" />
+              <strong>Address:</strong> Karachi, Pakistan
+            </p>
+            <p className="flex items-center gap-2">
+              <Phone size={20} stroke="black" fill="none" />
+              <strong>Phone:</strong> 03212076322
+            </p>
+            <p className="flex items-center gap-2">
+              <Mail size={20} stroke="black" fill="none" />
+              <strong>Email:</strong> yourbrand@example.com
+            </p>
+          </div>
+          
+          <button 
+            className="mt-6 px-6 py-3 bg-green-700 text-white rounded-xl text-lg hover:bg-green-800 transition"
+            onClick={() => console.log("Shop Now clicked")}
+            type="button"
+          >
             Shop Now
           </button>
         </div>
@@ -40,17 +45,18 @@ export default function Home() {
         {/* IMAGE SECTION */}
         <div className="relative w-full h-80 rounded-2xl overflow-hidden shadow-xl border border-green-200">
           <Image
-            src= {contactimg}
+            src={contactimg}
             alt="Dry Fruits"
             fill
             className="object-cover"
+            priority={false}
+            sizes="(max-width: 768px) 100vw, 50vw"
           />
         </div>
       </section>
 
       {/* FEATURES SECTION */}
       <section className="max-w-6xl mx-auto mt-20 grid md:grid-cols-3 gap-8 text-center">
-
         <div className="p-6 border border-green-300 rounded-xl shadow-sm hover:shadow-lg transition bg-white">
           <Leaf className="mx-auto mb-3" size={40} stroke="black" fill="none" />
           <h3 className="text-xl font-semibold text-green-700">100% Organic</h3>
@@ -78,12 +84,13 @@ export default function Home() {
             src="https://www.openstreetmap.org/export/embed.html?bbox=66.990%2C24.860%2C67.030%2C24.900&layer=mapnik"
             className="w-full h-full"
             loading="lazy"
-          ></iframe>
+            title="Our Location Map"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
         </div>
       </section>
 
-      <ContactFormSection/>
-
+      <ContactFormSection />
     </main>
   );
 }

@@ -1,17 +1,38 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Check, Leaf, Shield, Truck, Award, Sparkles, ChevronRight, Star, Package, Users, Clock, TrendingUp, ShoppingBag, Heart, Eye, Search, Menu, X, Phone, Mail, MapPin } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { 
+  Check, Leaf, Shield, Truck, Award, Sparkles, ChevronRight, Star, 
+  Package, Users, Clock, ShoppingBag, Heart, Eye, Search, Menu, X, 
+  Phone, Mail, MapPin, ChefHat, Stethoscope, Smartphone, Nut, 
+  Wheat, Bowl, Coffee, Pepper, Gift, Apple, Soup, FlaskConical,
+  LucideIcon
+} from "lucide-react"
 import { useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Progress } from "@/components/ui/progress"
 
 export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [wishlist, setWishlist] = useState<string[]>([])
+
+  // Icon mapping for categories
+  const categoryIcons: { [key: string]: LucideIcon } = {
+    "Dry Fruits": Nut,
+    "Rice": Wheat,
+    "Daal (Lentils)": Bowl,
+    "Dry Fruit Powder": Coffee,
+    "Curry Masalay": Pepper,
+    "Specialty Items": Gift
+  }
+
+  // Icon mapping for testimonials
+  const testimonialIcons: { [key: string]: LucideIcon } = {
+    "Executive Chef": ChefHat,
+    "Nutritionist": Stethoscope,
+    "Home Chef & Food Blogger": Smartphone
+  }
 
   const categories = [
     {
@@ -19,7 +40,6 @@ export default function HomePage() {
       description: "Premium quality almonds, cashews, walnuts, and more",
       image: "/assorted-premium-dry-fruits-almonds-cashews.jpg",
       count: "24 Products",
-      icon: "🌰",
       gradient: "from-amber-100 to-emerald-50"
     },
     {
@@ -27,7 +47,6 @@ export default function HomePage() {
       description: "Finest basmati and specialty rice varieties",
       image: "/premium-basmati-rice-grains.jpg",
       count: "18 Products",
-      icon: "🍚",
       gradient: "from-emerald-50 to-amber-50"
     },
     {
@@ -35,7 +54,6 @@ export default function HomePage() {
       description: "Pure and fresh lentils for healthy cooking",
       image: "/colorful-lentils-daal-varieties.jpg",
       count: "32 Products",
-      icon: "🥣",
       gradient: "from-amber-100 to-emerald-50"
     },
     {
@@ -43,7 +61,6 @@ export default function HomePage() {
       description: "Ground to perfection for your recipes",
       image: "/dry-fruit-powder-in-bowl.jpg",
       count: "15 Products",
-      icon: "✨",
       gradient: "from-emerald-50 to-amber-50"
     },
     {
@@ -51,7 +68,6 @@ export default function HomePage() {
       description: "Authentic spice blends for flavorful dishes",
       image: "/aromatic-curry-spices-masala.jpg",
       count: "28 Products",
-      icon: "🌶",
       gradient: "from-amber-100 to-emerald-50"
     },
     {
@@ -59,7 +75,6 @@ export default function HomePage() {
       description: "Exclusive gourmet and organic products",
       image: "/specialty-dry-fruits.jpg",
       count: "42 Products",
-      icon: "🎁",
       gradient: "from-emerald-50 to-amber-50"
     },
   ]
@@ -193,8 +208,20 @@ export default function HomePage() {
     }
   }
 
+  // Simple Progress Bar Component (replacement)
+  const ProgressBar = ({ value, className = "" }: { value: number; className?: string }) => {
+    return (
+      <div className={`w-full bg-gray-200 rounded-full h-1 ${className}`}>
+        <div 
+          className="bg-gradient-to-r from-green-700 to-emerald-800 h-1 rounded-full transition-all duration-300"
+          style={{ width: `${value}%` }}
+        />
+      </div>
+    )
+  }
+
   return (
-    <div className=" mt-40 min-h-screen bg-gradient-to-b from-white via-amber-50/20 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-white via-amber-50/20 to-white">
     
       {/* Hero Section - VIP Level */}
       <section className="relative overflow-hidden pt-8 md:pt-12 pb-16 md:pb-24">
@@ -301,40 +328,45 @@ export default function HomePage() {
           </div>
           
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {categories.map((category, index) => (
-              <Card 
-                key={index} 
-                className="group relative overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
-              >
-                <div className=""/>
-                <CardContent className="relative p-0">
-                  <div className="p-8">
-                    <div className="flex items-start justify-between mb-6">
-                      <div className="text-4xl">{category.icon}</div>
-                      <Badge className="bg-gradient-to-r from-green-700 to-emerald-800 text-white border-0">
-                        {category.count}
-                      </Badge>
+            {categories.map((category, index) => {
+              const Icon = categoryIcons[category.title] || Package
+              return (
+                <Card 
+                  key={index} 
+                  className="group relative overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
+                >
+                  <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} opacity-50`} />
+                  <CardContent className="relative p-0">
+                    <div className="p-8">
+                      <div className="flex items-start justify-between mb-6">
+                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-700/10 to-emerald-800/10 flex items-center justify-center">
+                          <Icon className="w-8 h-8 text-green-700" />
+                        </div>
+                        <Badge className="bg-gradient-to-r from-green-700 to-emerald-800 text-white border-0">
+                          {category.count}
+                        </Badge>
+                      </div>
+                      
+                      <h3 className="text-2xl font-bold text-gray-900 mb-3">{category.title}</h3>
+                      <p className="text-gray-600 mb-6">{category.description}</p>
+                      
+                      <Button 
+                        variant="ghost" 
+                        className="group-hover:bg-gradient-to-r group-hover:from-green-700 group-hover:to-emerald-800 group-hover:text-white px-0"
+                      >
+                        Explore Collection
+                        <ChevronRight className="ml-2 w-4 h-4 group-hover:translate-x-2 transition-transform" />
+                      </Button>
                     </div>
                     
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3">{category.title}</h3>
-                    <p className="text-gray-600 mb-6">{category.description}</p>
-                    
-                    <Button 
-                      variant="ghost" 
-                      className="group-hover:bg-gradient-to-r group-hover:from-green-700 group-hover:to-emerald-800 group-hover:text-white px-0"
-                    >
-                      Explore Collection
-                      <ChevronRight className="ml-2 w-4 h-4 group-hover:translate-x-2 transition-transform" />
-                    </Button>
-                  </div>
-                  
-                  <div className="relative h-48 overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent z-10" />
-                    <div className="w-full h-full bg-gradient-to-br from-green-100 to-amber-100" />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                    <div className="relative h-48 overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent z-10" />
+                      <div className="w-full h-full bg-gradient-to-br from-green-100 to-amber-100" />
+                    </div>
+                  </CardContent>
+                </Card>
+              )
+            })}
           </div>
         </div>
       </section>
@@ -427,7 +459,7 @@ export default function HomePage() {
                         <span>Sold: {Math.floor(product.reviews / 2)}</span>
                         <span>Stock: {product.reviews % 100} left</span>
                       </div>
-                      <Progress value={70} className="h-1" />
+                      <ProgressBar value={70} />
                     </div>
                   </div>
                 </CardContent>
@@ -576,49 +608,51 @@ export default function HomePage() {
                 name: "Priya Sharma",
                 role: "Executive Chef",
                 comment: "The quality is exceptional! Fresh, premium ingredients that elevate my recipes.",
-                rating: 5,
-                avatar: "👩‍🍳"
+                rating: 5
               },
               {
                 name: "Rajesh Kumar",
                 role: "Nutritionist",
                 comment: "As a nutritionist, I recommend these products to all my clients. Pure and premium quality!",
-                rating: 5,
-                avatar: "👨‍⚕"
+                rating: 5
               },
               {
                 name: "Anita Patel",
                 role: "Home Chef & Food Blogger",
                 comment: "The freshness and quality are unmatched. My go-to source for premium ingredients!",
-                rating: 5,
-                avatar: "📱"
+                rating: 5
               },
-            ].map((testimonial, index) => (
-              <Card key={index} className="border-0 shadow-xl hover:shadow-2xl transition-shadow">
-                <CardContent className="p-8">
-                  <div className="flex items-center gap-2 mb-6">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-5 h-5 ${
-                          i < testimonial.rating ? "fill-amber-400 text-amber-400" : "text-gray-300"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <p className="text-gray-700 text-lg italic mb-8 leading-relaxed">
-                    "{testimonial.comment}"
-                  </p>
-                  <div className="flex items-center gap-4">
-                    <div className="text-3xl">{testimonial.avatar}</div>
-                    <div>
-                      <div className="font-bold text-gray-900 text-lg">{testimonial.name}</div>
-                      <div className="text-green-700 font-medium">{testimonial.role}</div>
+            ].map((testimonial, index) => {
+              const Icon = testimonialIcons[testimonial.role] || Users
+              return (
+                <Card key={index} className="border-0 shadow-xl hover:shadow-2xl transition-shadow">
+                  <CardContent className="p-8">
+                    <div className="flex items-center gap-2 mb-6">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-5 h-5 ${
+                            i < testimonial.rating ? "fill-amber-400 text-amber-400" : "text-gray-300"
+                          }`}
+                        />
+                      ))}
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                    <p className="text-gray-700 text-lg italic mb-8 leading-relaxed">
+                      "{testimonial.comment}"
+                    </p>
+                    <div className="flex items-center gap-4">
+                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-700/10 to-emerald-800/10 flex items-center justify-center">
+                        <Icon className="w-8 h-8 text-green-700" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-gray-900 text-lg">{testimonial.name}</div>
+                        <div className="text-green-700 font-medium">{testimonial.role}</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )
+            })}
           </div>
         </div>
       </section>
@@ -655,10 +689,48 @@ export default function HomePage() {
               </Button>
             </div>
             
-             </div>
+            {/* Contact Info */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 pt-12 border-t border-gray-700">
+              {[
+                { icon: Phone, text: "+91 98765 43210", label: "Premium Support" },
+                { icon: Mail, text: "premium@naturalgoods.com", label: "Email Us" },
+                { icon: MapPin, text: "Mumbai, Delhi, Bangalore", label: "Showrooms" },
+              ].map((item, index) => {
+                const Icon = item.icon
+                return (
+                  <div key={index} className="text-center">
+                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r from-green-700/20 to-emerald-800/20 mb-4">
+                      <Icon className="w-6 h-6 text-green-300" />
+                    </div>
+                    <div className="font-bold text-lg">{item.text}</div>
+                    <div className="text-gray-400 text-sm">{item.label}</div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
         </div>
       </section>
 
+      {/* Footer */}
+      <footer className="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="flex items-center gap-3 mb-6 md:mb-0">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-700 to-emerald-800 flex items-center justify-center">
+                <Leaf className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <div className="font-bold text-white text-xl">Premium Natural</div>
+                <div className="text-sm">Since 2008 • Premium Quality Guaranteed</div>
+              </div>
+            </div>
+            <div className="text-sm">
+              © 2024 Premium Natural Goods. All rights reserved.
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   )
-}   
+}
