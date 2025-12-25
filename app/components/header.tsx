@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import React, { useState } from "react";
 import { Search, Heart, ShoppingBag, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -57,18 +58,22 @@ const Navbar = () => {
               </svg>
             </button>
 
-            <button className="relative hover:text-gray-300 transition">
-              <Heart size={24} />
-              <span className="absolute -top-1 -right-1 bg-red-600 px-1.5 py-0.5 text-xs rounded-full text-white">
-                0
-              </span>
-            </button>
+  <button className="relative hover:text-gray-300 transition">
+            
+    <Heart size={24} />
+    <span className="absolute -top-1 -right-1 bg-red-600 px-1.5 py-0.5 text-xs rounded-full text-white">
+      0
+    </span>
+
+  </button>
 
             <button className="relative hover:text-gray-300 transition">
+              <Link href="/cart">
               <ShoppingBag size={24} />
               <span className="absolute -top-1 -right-1 bg-red-600 px-1.5 py-0.5 text-xs rounded-full text-white">
                 0
               </span>
+              </Link>
             </button>
 
             <div className="md:hidden">
