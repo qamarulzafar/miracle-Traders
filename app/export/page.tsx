@@ -355,7 +355,7 @@ export default function ExportBusinessPage() {
       color: "from-pink-500 to-pink-700"
     },
     {
-      icon: RefreshCw,
+      icon: Gift,
       title: "Flexible Payment",
       description: "Multiple payment options including LC, TT, and credit terms",
       color: "from-orange-500 to-orange-700"
