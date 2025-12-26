@@ -1,6 +1,9 @@
 "use client"
+<<<<<<< HEAD
+=======
 
 import React, { JSX } from "react";
+>>>>>>> a7622958ca6715e7c392634542ded1d8746b1b5d
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { 
@@ -13,6 +16,7 @@ import {
 import { useState, ReactNode } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import { jsx } from "react/jsx-runtime"
 
 // Type definitions
 interface Category {

@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import React from "react";
-import { useState } from "react";
+import React from "react"
+import { useState } from "react"
 import {
   Package,
   Globe,
@@ -13,8 +13,13 @@ import {
   Shield,
   FileText,
   Download,
+  Calendar,
+  CreditCard,
+  Headphones,
+  BarChart,
+  Target,
+  Leaf,
   Clock,
-  RefreshCw,
   ChevronDown,
   ChevronUp,
   ShoppingCart,
@@ -24,30 +29,17 @@ import {
   MapPin,
   Factory,
   Warehouse,
+  Scale,
   Tag,
   Percent,
   Gift,
   Zap,
-  Headphones,
-  BarChart,
-  Target,
-  Leaf,
-  CreditCard,
-  LucideIcon,
+  LucideIcon
 } from "lucide-react";
 
 // Type Definitions
 type ProductType = "export" | "vip" | "premium" | "bulk";
-type CategoryId =
-  | "dry-fruits"
-  | "rice"
-  | "masala"
-  | "oil"
-  | "pulses"
-  | "snacks"
-  | "sweets"
-  | "beverages"
-  | "all";
+type CategoryId = "dry-fruits" | "rice" | "masala" | "oil" | "pulses" | "snacks" | "sweets" | "beverages" | "all";
 
 interface Category {
   id: CategoryId;
@@ -110,78 +102,23 @@ interface StatItem {
 }
 
 export default function ExportBusinessPage() {
-  const [quantity, setQuantity] = useState<Record<number, number>>({});
-  const [activeTab, setActiveTab] = useState<ProductType | "all">("all");
-  const [expandedProduct, setExpandedProduct] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<CategoryId>("all");
+  const [quantity, setQuantity] = useState({})
+  const [activeTab, setActiveTab] = useState("all")
+  const [expandedProduct, setExpandedProduct] = useState<string | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState("all")
 
   const categories: Category[] = [
-    {
-      id: "dry-fruits",
-      name: "Dry Fruits",
-      count: 28,
-      icon: "🥜",
-      color:
-        "bg-gradient-to-br from-amber-500/10 to-amber-600/10 border-amber-200",
-    },
-    {
-      id: "rice",
-      name: "Premium Rice",
-      count: 12,
-      icon: "🍚",
-      color:
-        "bg-gradient-to-br from-emerald-500/10 to-emerald-600/10 border-emerald-200",
-    },
-    {
-      id: "masala",
-      name: "Spices & Masala",
-      count: 36,
-      icon: "🌶️",
-      color: "bg-gradient-to-br from-red-500/10 to-red-600/10 border-red-200",
-    },
-    {
-      id: "oil",
-      name: "Edible Oils",
-      count: 8,
-      icon: "🫒",
-      color:
-        "bg-gradient-to-br from-yellow-500/10 to-yellow-600/10 border-yellow-200",
-    },
-    {
-      id: "pulses",
-      name: "Pulses & Lentils",
-      count: 15,
-      icon: "🫘",
-      color:
-        "bg-gradient-to-br from-orange-500/10 to-orange-600/10 border-orange-200",
-    },
-    {
-      id: "snacks",
-      name: "Snacks",
-      count: 22,
-      icon: "🥨",
-      color:
-        "bg-gradient-to-br from-purple-500/10 to-purple-600/10 border-purple-200",
-    },
-    {
-      id: "sweets",
-      name: "Indian Sweets",
-      count: 18,
-      icon: "🍬",
-      color:
-        "bg-gradient-to-br from-pink-500/10 to-pink-600/10 border-pink-200",
-    },
-    {
-      id: "beverages",
-      name: "Beverages",
-      count: 14,
-      icon: "🥤",
-      color:
-        "bg-gradient-to-br from-blue-500/10 to-blue-600/10 border-blue-200",
-    },
+    { id: "dry-fruits", name: "Dry Fruits", count: 28, icon: "🥜", color: "from-amber-500 to-amber-700" },
+    { id: "rice", name: "Premium Rice", count: 12, icon: "🍚", color: "from-emerald-500 to-emerald-700" },
+    { id: "masala", name: "Spices & Masala", count: 36, icon: "🌶️", color: "from-red-500 to-red-700" },
+    { id: "oil", name: "Edible Oils", count: 8, icon: "🫒", color: "from-yellow-500 to-yellow-700" },
+    { id: "pulses", name: "Pulses & Lentils", count: 15, icon: "🫘", color: "from-orange-500 to-orange-700" },
+    { id: "snacks", name: "Snacks", count: 22, icon: "🥨", color: "from-purple-500 to-purple-700" },
+    { id: "sweets", name: "Indian Sweets", count: 18, icon: "🍬", color: "from-pink-500 to-pink-700" },
+    { id: "beverages", name: "Beverages", count: 14, icon: "🥤", color: "from-blue-500 to-blue-700" },
   ];
 
-  const products: Product[] = [
+  const products = [
     {
       id: 1,
       name: "Premium California Almonds",
@@ -195,15 +132,9 @@ export default function ExportBusinessPage() {
       packaging: "25kg Vacuum Pack",
       shelfLife: "18 months",
       certifications: ["ISO 22000", "USDA Organic", "HACCP"],
-      description:
-        "Premium California almonds, extra-large size, superior quality with 99% purity",
-      specs: [
-        "Size: 28-30mm",
-        "Moisture: <5%",
-        "Purity: 99%",
-        "Color: Golden Brown",
-      ],
-      image: "/products/almonds.jpg",
+      description: "Premium California almonds, extra-large size, superior quality with 99% purity",
+      specs: ["Size: 28-30mm", "Moisture: <5%", "Purity: 99%", "Color: Golden Brown"],
+      image: "/products/almonds.jpg"
     },
     {
       id: 2,
@@ -218,15 +149,9 @@ export default function ExportBusinessPage() {
       packaging: "50kg Jute Bags",
       shelfLife: "24 months",
       certifications: ["FSSAI", "ISO 9001", "Non-GMO"],
-      description:
-        "Extra-long grain Basmati rice, aged for 1 year, minimum broken grains",
-      specs: [
-        "Grain Length: 8.5mm",
-        "Broken: <2%",
-        "Aroma: Premium",
-        "Cooking Time: 15min",
-      ],
-      image: "/products/basmati.jpg",
+      description: "Extra-long grain Basmati rice, aged for 1 year, minimum broken grains",
+      specs: ["Grain Length: 8.5mm", "Broken: <2%", "Aroma: Premium", "Cooking Time: 15min"],
+      image: "/products/basmati.jpg"
     },
     {
       id: 3,
@@ -241,15 +166,9 @@ export default function ExportBusinessPage() {
       packaging: "1gm, 5gm, 10gm Packs",
       shelfLife: "36 months",
       certifications: ["ISO 22000", "Geographical Indication"],
-      description:
-        "Pure Kashmiri Mongra saffron, hand-picked, deep red color with superior aroma",
-      specs: [
-        "Color: Deep Red",
-        "Crocin: >250",
-        "Aroma: Strong",
-        "Moisture: <10%",
-      ],
-      image: "/products/saffron.jpg",
+      description: "Pure Kashmiri Mongra saffron, hand-picked, deep red color with superior aroma",
+      specs: ["Color: Deep Red", "Crocin: >250", "Aroma: Strong", "Moisture: <10%"],
+      image: "/products/saffron.jpg"
     },
     {
       id: 4,
@@ -264,28 +183,92 @@ export default function ExportBusinessPage() {
       packaging: "1L, 5L, 20L Tins",
       shelfLife: "24 months",
       certifications: ["EU Organic", "FDA Approved", "ISO 22000"],
-      description:
-        "First cold-pressed extra virgin olive oil, acidity <0.8%, premium quality",
-      specs: [
-        "Acidity: <0.8%",
-        "Peroxide: <10",
-        "Color: Green Gold",
-        "Smoke Point: 210°C",
-      ],
-      image: "/products/olive-oil.jpg",
+      description: "First cold-pressed extra virgin olive oil, acidity <0.8%, premium quality",
+      specs: ["Acidity: <0.8%", "Peroxide: <10", "Color: Green Gold", "Smoke Point: 210°C"],
+      image: "/products/olive-oil.jpg"
     },
-  ];
+    {
+      id: 5,
+      name: "Toor Dal (Split Pigeon Peas)",
+      category: "pulses",
+      type: "bulk",
+      grade: "Grade A",
+      moq: "2000 kg",
+      price: "$1.8/kg",
+      bulkPrice: "$1.6/kg (10000kg+)",
+      origin: "Maharashtra, India",
+      packaging: "50kg PP Bags",
+      shelfLife: "12 months",
+      certifications: ["FSSAI", "AGMARK"],
+      description: "Premium quality Toor Dal, uniform size, minimal broken, rich in protein",
+      specs: ["Purity: 99.5%", "Moisture: <10%", "Protein: 22%", "Foreign Matter: <0.5%"],
+      image: "/products/toor-dal.jpg"
+    },
+    {
+      id: 6,
+      name: "Premium Cashew W320",
+      category: "dry-fruits",
+      type: "vip",
+      grade: "W320",
+      moq: "300 kg",
+      price: "$18.5/kg",
+      bulkPrice: "$16.8/kg (1000kg+)",
+      origin: "Vietnam",
+      packaging: "25kg Vacuum Pack",
+      shelfLife: "12 months",
+      certifications: ["USDA", "FDA", "ISO 22000"],
+      description: "Whole white cashew nuts, size 320 pieces per pound, premium export quality",
+      specs: ["Size: 320/pound", "Color: White", "Broken: <3%", "Moisture: <5%"],
+      image: "/products/cashew.jpg"
+    },
+    {
+      id: 7,
+      name: "Garam Masala Powder",
+      category: "masala",
+      type: "export",
+      grade: "Premium Blend",
+      moq: "100 kg",
+      price: "$15/kg",
+      bulkPrice: "$13.5/kg (500kg+)",
+      origin: "Rajasthan, India",
+      packaging: "1kg, 5kg, 25kg Packs",
+      shelfLife: "18 months",
+      certifications: ["FSSAI", "ISO 9001", "ISO 22000"],
+      description: "Traditional blend of 12 spices, freshly ground, authentic aroma and flavor",
+      specs: ["Mesh Size: 60", "Moisture: <8%", "Additives: None", "Aroma: Strong"],
+      image: "/products/garam-masala.jpg"
+    },
+    {
+      id: 8,
+      name: "Black Pepper MG1",
+      category: "masala",
+      type: "bulk",
+      grade: "MG1",
+      moq: "500 kg",
+      price: "$9.5/kg",
+      bulkPrice: "$8.5/kg (2000kg+)",
+      origin: "Kerala, India",
+      packaging: "50kg PP Bags",
+      shelfLife: "24 months",
+      certifications: ["ASTA", "ISO 22000"],
+      description: "Malabar Garbled 1 black pepper, bold size, pungency >5%, premium quality",
+      specs: ["Size: >4mm", "Pungency: >5%", "Moisture: <11%", "Light Berries: <2%"],
+      image: "/products/black-pepper.jpg"
+    },
+  ]
 
-  const exportCountries: ExportCountry[] = [
+  const exportCountries = [
     { country: "USA", flag: "🇺🇸", volume: "1200 MT", growth: "+15%" },
     { country: "UAE", flag: "🇦🇪", volume: "800 MT", growth: "+22%" },
     { country: "UK", flag: "🇬🇧", volume: "650 MT", growth: "+18%" },
     { country: "Canada", flag: "🇨🇦", volume: "450 MT", growth: "+25%" },
     { country: "Australia", flag: "🇦🇺", volume: "380 MT", growth: "+20%" },
     { country: "Singapore", flag: "🇸🇬", volume: "320 MT", growth: "+28%" },
+    { country: "Germany", flag: "🇩🇪", volume: "280 MT", growth: "+12%" },
+    { country: "Japan", flag: "🇯🇵", volume: "220 MT", growth: "+30%" },
   ];
 
-  const exportProcess: ExportProcessStep[] = [
+  const exportProcess = [
     {
       step: 1,
       title: "Inquiry & Quotation",
@@ -330,13 +313,10 @@ export default function ExportBusinessPage() {
       duration: "15-30 days",
       icon: Truck,
     },
-  ];
+  ]
 
   const certificationsList: Certification[] = [
-    {
-      name: "FSSAI",
-      description: "Food Safety and Standards Authority of India",
-    },
+    { name: "FSSAI", description: "Food Safety and Standards Authority of India" },
     { name: "ISO 22000:2018", description: "Food Safety Management System" },
     {
       name: "USDA Organic",
@@ -345,106 +325,76 @@ export default function ExportBusinessPage() {
     { name: "HACCP", description: "Hazard Analysis Critical Control Point" },
     { name: "FDA Approved", description: "Food and Drug Administration (USA)" },
     { name: "EU Organic", description: "European Union Organic Certification" },
+    { name: "Kosher", description: "Kosher Certification" },
+    { name: "Halal", description: "Halal Certification" },
   ];
 
   const businessBenefits: BusinessBenefit[] = [
     {
       icon: Percent,
       title: "Competitive Pricing",
-      description:
-        "Direct sourcing from farms ensures best prices with volume discounts",
-      color: "from-green-500 to-emerald-600",
+      description: "Direct sourcing from farms ensures best prices with volume discounts",
+      color: "from-green-500 to-green-700"
     },
     {
       icon: Zap,
       title: "Fast Lead Time",
-      description:
-        "30% faster processing with dedicated export documentation team",
-      color: "from-blue-500 to-cyan-600",
+      description: "30% faster processing with dedicated export documentation team",
+      color: "from-blue-500 to-blue-700"
     },
     {
       icon: Headphones,
       title: "Dedicated Support",
-      description:
-        "24/7 export manager support with multi-language capabilities",
-      color: "from-purple-500 to-violet-600",
+      description: "24/7 export manager support with multi-language capabilities",
+      color: "from-purple-500 to-purple-700"
     },
     {
       icon: Gift,
       title: "Free Samples",
-      description:
-        "Free product samples for quality approval before bulk orders",
-      color: "from-pink-500 to-rose-600",
+      description: "Free product samples for quality approval before bulk orders",
+      color: "from-pink-500 to-pink-700"
     },
     {
       icon: RefreshCw,
       title: "Flexible Payment",
-      description:
-        "Multiple payment options including LC, TT, and credit terms",
-      color: "from-orange-500 to-amber-600",
+      description: "Multiple payment options including LC, TT, and credit terms",
+      color: "from-orange-500 to-orange-700"
     },
     {
       icon: BarChart,
       title: "Market Insights",
       description: "Regular market analysis and product trend reports",
-      color: "from-indigo-500 to-blue-600",
+      color: "from-indigo-500 to-indigo-700"
     },
   ];
 
   const stats: StatItem[] = [
-    {
-      number: "5000+",
-      label: "Export Clients",
-      icon: Users,
-      color: "text-emerald-600",
-    },
-    {
-      number: "35+",
-      label: "Countries Served",
-      icon: Globe,
-      color: "text-blue-600",
-    },
-    {
-      number: "120+",
-      label: "Products",
-      icon: Package,
-      color: "text-amber-600",
-    },
-    {
-      number: "98%",
-      label: "Client Retention",
-      icon: TrendingUp,
-      color: "text-green-600",
-    },
+    { number: "5000+", label: "Export Clients", icon: Users, color: "text-emerald-600" },
+    { number: "35+", label: "Countries Served", icon: Globe, color: "text-blue-600" },
+    { number: "120+", label: "Products", icon: Package, color: "text-amber-600" },
+    { number: "98%", label: "Client Retention", icon: TrendingUp, color: "text-green-600" },
   ];
 
   const handleQuoteRequest = (productId: number) => {
-    const product = products.find((p) => p.id === productId);
-    alert(
-      `Quote request sent for ${product?.name}. Our team will contact you within 30 minutes.`
-    );
+    const product = products.find(p => p.id === productId);
+    alert(`Quote request sent for ${product?.name}. Our team will contact you within 30 minutes.`);
   };
 
   const toggleProductDetails = (productId: string) => {
     setExpandedProduct(expandedProduct === productId ? null : productId);
   };
 
-  const tabLabels: (ProductType | "all")[] = [
-    "all",
-    "vip",
-    "premium",
-    "bulk",
-    "export",
-  ];
+  const tabLabels: (ProductType | "all")[] = ["all", "vip", "premium", "bulk", "export"];
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white pt-24">
-      {/* HERO SECTION - Modern Design */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-emerald-900 py-20">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&q=80')] opacity-10 bg-cover bg-center" />
-        <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-4 py-2 rounded-full mb-6 border border-white/20">
+    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white pt-[140px]">
+
+      {/* HERO SECTION */}
+      <section className="relative bg-gradient-to-r from-emerald-900 via-emerald-800 to-amber-900 py-20">
+        <div className="absolute inset-0 bg-black/20" />
+        <div className="relative container mx-auto px-6">
+          <div className="max-w-4xl">
+            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full mb-6">
               <Globe className="w-4 h-4" />
               <span className="text-sm font-medium">
                 Exporting to 35+ Countries Worldwide
@@ -454,10 +404,9 @@ export default function ExportBusinessPage() {
               Premium Export
               <span className="block text-emerald-400">Quality Products</span>
             </h1>
-            <p className="text-lg sm:text-xl text-gray-200 max-w-2xl mx-auto mb-8">
-              Source premium quality dry fruits, rice, spices, and food products
-              directly from producers. Trusted by businesses worldwide since
-              2010.
+            <p className="text-xl text-white/90 max-w-2xl mb-10">
+              Premium quality dry fruits, rice, spices, and food products for global markets.
+              Trusted by 500+ businesses worldwide.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg font-semibold transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2">
@@ -473,14 +422,11 @@ export default function ExportBusinessPage() {
         </div>
       </section>
 
-      {/* STATISTICS - Clean Cards */}
-      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* STATISTICS */}
+      <section className="container mx-auto px-6 py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {stats.map((stat, index) => (
-            <div
-              key={index}
-              className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
-            >
+            <div key={index} className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
               <div className={`${stat.color} mb-3`}>
                 <stat.icon className="w-8 h-8" />
               </div>
@@ -510,15 +456,14 @@ export default function ExportBusinessPage() {
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`p-5 rounded-xl transition-all duration-300 ${
-                selectedCategory === cat.id || selectedCategory === "all"
-                  ? `ring-2 ring-emerald-500 ${cat.color} scale-105`
-                  : "bg-white hover:bg-gray-50"
-              } shadow-sm border border-gray-100 text-left`}
+              className={`p-6 rounded-2xl transition-all duration-300 ${selectedCategory === cat.id || selectedCategory === "all"
+                  ? `bg-gradient-to-r ${cat.color} text-white scale-105`
+                  : "bg-white text-gray-800 hover:bg-gray-50"
+                } shadow-lg border border-gray-100`}
             >
-              <div className="text-2xl mb-2">{cat.icon}</div>
-              <div className="font-semibold text-gray-900 mb-1">{cat.name}</div>
-              <div className="text-sm text-gray-500">{cat.count} Products</div>
+              <div className="text-3xl mb-3">{cat.icon}</div>
+              <div className="font-bold mb-1">{cat.name}</div>
+              <div className="text-sm opacity-80">{cat.count} Products</div>
             </button>
           ))}
         </div>
@@ -537,16 +482,15 @@ export default function ExportBusinessPage() {
                   Detailed specifications and pricing for bulk orders
                 </p>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex gap-2">
                 {tabLabels.map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`px-3 py-1.5 rounded-lg font-medium text-sm capitalize ${
-                      activeTab === tab
-                        ? "bg-emerald-500 text-white"
+                    className={`px-4 py-2 rounded-full font-medium capitalize ${activeTab === tab
+                        ? "bg-emerald-600 text-white"
                         : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
+                      }`}
                   >
                     {tab === "vip" ? "VIP" : tab}
                   </button>
@@ -583,8 +527,7 @@ export default function ExportBusinessPage() {
                 {products
                   .filter(
                     (p) =>
-                      (selectedCategory === "all" ||
-                        p.category === selectedCategory) &&
+                      (selectedCategory === "all" || p.category === selectedCategory) &&
                       (activeTab === "all" || p.type === activeTab)
                   )
                   .map((product) => (
@@ -602,13 +545,12 @@ export default function ExportBusinessPage() {
                               </div>
                               <div className="text-xs text-gray-500 flex items-center gap-2 mt-1">
                                 <span
-                                  className={`px-2 py-0.5 rounded-full font-medium ${
-                                    product.type === "vip"
+                                  className={`px-2 py-1 rounded-full text-xs font-medium ${product.type === "vip"
                                       ? "bg-purple-100 text-purple-700"
                                       : product.type === "premium"
-                                      ? "bg-amber-100 text-amber-700"
-                                      : "bg-blue-100 text-blue-700"
-                                  }`}
+                                        ? "bg-amber-100 text-amber-700"
+                                        : "bg-blue-100 text-blue-700"
+                                    }`}
                                 >
                                   {product.type.toUpperCase()}
                                 </span>
@@ -655,7 +597,7 @@ export default function ExportBusinessPage() {
                               onClick={() =>
                                 toggleProductDetails(product.id.toString())
                               }
-                              className="p-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                              className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
                             >
                               {expandedProduct === product.id.toString() ? (
                                 <ChevronUp className="w-4 h-4" />
@@ -677,50 +619,63 @@ export default function ExportBusinessPage() {
                                   <FileText className="w-4 h-4" />
                                   Product Specifications
                                 </h4>
+
                                 <ul className="space-y-2">
                                   {product.specs.map((spec, idx) => (
                                     <li
                                       key={idx}
-                                      className="flex items-start gap-2 text-gray-700"
+                                      className="flex items-center gap-2 text-gray-700"
                                     >
-                                      <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
-                                      <span>{spec}</span>
+                                      <CheckCircle className="w-4 h-4 text-emerald-500" />
+                                      {spec}
                                     </li>
                                   ))}
                                 </ul>
+
+                                <div className="mt-6">
+                                  <h4 className="font-bold text-gray-900 mb-3">
+                                    Certifications
+                                  </h4>
+                                  <div className="flex flex-wrap gap-2">
+                                    {product.certifications.map((cert, idx) => (
+                                      <span
+                                        key={idx}
+                                        className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm"
+                                      >
+                                        {cert}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
                               </div>
+
+                              {/* RIGHT SIDE */}
                               <div>
-                                <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                                  <Package className="w-4 h-4" />
-                                  Packaging Details
+                                <h4 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                  <Package className="w-5 h-5" />
+                                  Packaging & Details
                                 </h4>
-                                <div className="space-y-3">
+
+                                <div className="space-y-4">
                                   <div>
-                                    <div className="text-sm text-gray-600">
-                                      Packaging
-                                    </div>
-                                    <div className="font-medium">
-                                      {product.packaging}
-                                    </div>
+                                    <div className="text-sm text-gray-600">Packaging</div>
+                                    <div className="font-medium">{product.packaging}</div>
                                   </div>
+
                                   <div>
-                                    <div className="text-sm text-gray-600">
-                                      Shelf Life
-                                    </div>
-                                    <div className="font-medium">
-                                      {product.shelfLife}
-                                    </div>
+                                    <div className="text-sm text-gray-600">Shelf Life</div>
+                                    <div className="font-medium">{product.shelfLife}</div>
                                   </div>
+
                                   <div>
-                                    <div className="text-sm text-gray-600">
-                                      Description
-                                    </div>
-                                    <div className="text-gray-700 text-sm">
+                                    <div className="text-sm text-gray-600">Description</div>
+                                    <div className="text-gray-700 mt-1">
                                       {product.description}
                                     </div>
                                   </div>
-                                  <button className="mt-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-medium text-sm transition-colors w-full flex items-center justify-center gap-2">
-                                    <ShoppingCart className="w-4 h-4" />
+
+                                  <button className="mt-4 w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg font-semibold hover:opacity-90 transition-all">
+                                    <ShoppingCart className="inline w-5 h-5 mr-2" />
                                     Add to Inquiry List
                                   </button>
                                 </div>
@@ -737,43 +692,56 @@ export default function ExportBusinessPage() {
         </div>
       </section>
 
-      {/* EXPORT PROCESS - Timeline */}
-      <section className="bg-gray-50 py-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-3">
-              Seamless Export Process
-            </h2>
-            <p className="text-gray-500 max-w-2xl mx-auto">
-              From inquiry to delivery - a streamlined process designed for
-              efficiency
+      {/* EXPORT COUNTRIES */}
+      <section className="container mx-auto px-6 py-16">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Export Destinations</h2>
+          <p className="text-gray-600 text-lg">We ship to major countries worldwide</p>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {exportCountries.map((country, index) => (
+            <div
+              key={index}
+              className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all"
+            >
+              <div className="text-4xl mb-3">{country.flag}</div>
+              <div className="font-bold text-gray-900 mb-2">{country.country}</div>
+              <div className="text-2xl font-bold text-emerald-700 mb-1">{country.volume}</div>
+              <div className="text-sm text-green-600 font-medium">{country.growth}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* EXPORT PROCESS */}
+      <section className="bg-gradient-to-b from-gray-50 to-white py-20">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Export Process</h2>
+            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+              Seamless export experience from inquiry to delivery
             </p>
           </div>
 
           <div className="relative">
-            <div className="hidden lg:block absolute left-0 right-0 top-1/2 h-0.5 bg-gradient-to-r from-emerald-400 to-amber-400 transform -translate-y-1/2" />
+            <div className="absolute left-0 right-0 top-1/2 h-0.5 bg-gradient-to-r from-emerald-400 to-amber-400 transform -translate-y-1/2 hidden lg:block" />
 
-            <div className="grid lg:grid-cols-6 gap-6">
+            <div className="grid lg:grid-cols-6 gap-8">
               {exportProcess.map((step) => (
                 <div key={step.step} className="relative">
                   <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-                    <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
-                      <step.icon className="w-6 h-6 text-white" />
+                    <div className="w-16 h-16 bg-gradient-to-r from-emerald-600 to-emerald-800 rounded-2xl flex items-center justify-center shadow-xl">
+                      <step.icon className="w-8 h-8 text-white" />
                     </div>
                   </div>
-                  <div className="pt-10 bg-white rounded-lg p-5 shadow-sm border border-gray-100 mt-6 h-full">
-                    <div className="text-center">
-                      <div className="text-xs font-semibold text-emerald-600 mb-1">
-                        Step {step.step}
-                      </div>
-                      <h3 className="font-semibold text-gray-900 text-sm mb-2">
-                        {step.title}
-                      </h3>
-                      <p className="text-gray-500 text-xs mb-3">
-                        {step.description}
-                      </p>
-                      <div className="flex items-center justify-center gap-1 text-xs text-gray-400">
-                        <Clock className="w-3 h-3" />
+                  <div className="pt-12 bg-white rounded-2xl p-6 shadow-lg border border-gray-100 mt-8 h-full">
+                    <div className="text-center mb-4">
+                      <div className="text-sm font-semibold text-emerald-600 mb-2">Step {step.step}</div>
+                      <h3 className="font-bold text-gray-900 text-lg mb-3">{step.title}</h3>
+                      <p className="text-gray-600 text-sm mb-4">{step.description}</p>
+                      <div className="inline-flex items-center gap-1 text-sm text-gray-500">
+                        <Clock className="w-4 h-4" />
                         {step.duration}
                       </div>
                     </div>
@@ -785,168 +753,165 @@ export default function ExportBusinessPage() {
         </div>
       </section>
 
-      {/* GLOBAL REACH */}
-      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-3">
-            Global Export Network
-          </h2>
-          <p className="text-gray-500">
-            Serving clients across multiple countries worldwide
-          </p>
+      {/* EXPORT DESTINATIONS */}
+      <section className="container mx-auto px-6 py-20">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Global Export Network</h2>
+          <p className="text-gray-600 text-lg">Serving clients across 35+ countries</p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid md:grid-cols-4 gap-6 mb-12">
           {exportCountries.map((country) => (
-            <div
-              key={country.country}
-              className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
-            >
-              <div className="text-2xl mb-2">{country.flag}</div>
-              <div className="font-semibold text-gray-900 mb-1">
-                {country.country}
+            <div key={country.country} className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all hover:-translate-y-1">
+              <div className="flex items-center justify-between mb-4">
+                <div className="text-2xl">{country.flag}</div>
+                <div className={`px-3 py-1 rounded-full text-sm font-medium ${country.growth.startsWith('+')
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-red-100 text-red-700'
+                  }`}>
+                  {country.growth}
+                </div>
               </div>
-              <div className="text-xs text-gray-500 mb-1">Annual Volume</div>
-              <div className="text-lg font-bold text-emerald-700">
-                {country.volume}
-              </div>
-              <div
-                className={`text-xs mt-1 ${
-                  country.growth.startsWith("+")
-                    ? "text-green-600"
-                    : "text-red-600"
-                }`}
-              >
-                {country.growth} growth
-              </div>
+              <div className="font-bold text-gray-900 text-lg mb-1">{country.country}</div>
+              <div className="text-gray-600 text-sm">Annual Volume</div>
+              <div className="text-2xl font-bold text-emerald-700">{country.volume}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* BUSINESS BENEFITS */}
-      <section className="bg-gradient-to-br from-gray-50 to-white py-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-3">
-              Why Partner With Us?
-            </h2>
-            <p className="text-gray-500">
-              Premium benefits designed for business success
-            </p>
+      {/* CERTIFICATIONS */}
+      <section className="bg-gradient-to-r from-emerald-50 to-amber-50 py-20">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Certifications & Compliance</h2>
+            <p className="text-gray-600 text-lg">Meeting global quality and safety standards</p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {businessBenefits.map((benefit, index) => (
-              <div
-                key={index}
-                className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-all"
-              >
-                <div
-                  className={`w-12 h-12 bg-gradient-to-br ${benefit.color} rounded-lg flex items-center justify-center mb-4`}
-                >
-                  <benefit.icon className="w-6 h-6 text-white" />
+          <div className="grid md:grid-cols-4 gap-6">
+            {certificationsList.map((cert) => (
+              <div key={cert.name} className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+                <div className="w-16 h-16 bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <Shield className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="font-semibold text-gray-900 text-lg mb-2">
-                  {benefit.title}
-                </h3>
-                <p className="text-gray-500 text-sm">{benefit.description}</p>
+                <h3 className="text-xl font-bold text-center text-gray-900 mb-2">{cert.name}</h3>
+                <p className="text-gray-600 text-center text-sm">{cert.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CERTIFICATIONS */}
-      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-3">
-            Certifications & Compliance
-          </h2>
-          <p className="text-gray-500">
-            Meeting international quality and safety standards
-          </p>
+      {/* BUSINESS BENEFITS */}
+      <section className="container mx-auto px-6 py-20">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Partner With Us?</h2>
+          <p className="text-gray-600 text-lg">Premium benefits for our business partners</p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          {certificationsList.map((cert) => (
-            <div
-              key={cert.name}
-              className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
-            >
-              <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg flex items-center justify-center mx-auto mb-3">
-                <Shield className="w-5 h-5 text-white" />
+        <div className="grid md:grid-cols-3 gap-8">
+          {businessBenefits.map((benefit, index) => (
+            <div key={index} className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-all hover:-translate-y-2">
+              <div className={`w-16 h-16 bg-gradient-to-br ${benefit.color} rounded-2xl flex items-center justify-center mb-6`}>
+                <benefit.icon className="w-8 h-8 text-white" />
               </div>
-              <h3 className="font-semibold text-center text-gray-900 text-sm mb-1">
-                {cert.name}
-              </h3>
-              <p className="text-gray-500 text-xs text-center">
-                {cert.description}
-              </p>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">{benefit.title}</h3>
+              <p className="text-gray-600">{benefit.description}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* CTA SECTION */}
-      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="bg-gradient-to-br from-emerald-900 to-emerald-800 rounded-2xl p-8 md:p-12">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to Start Exporting?
-            </h2>
-            <p className="text-emerald-100 mb-8 max-w-2xl mx-auto">
-              Join thousands of satisfied business clients worldwide. Get
-              customized quotes, samples, and expert guidance for your export
-              requirements.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-6 py-3 bg-white text-emerald-900 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-                Request Full Catalog
-              </button>
-              <button className="px-6 py-3 bg-transparent border border-white text-white rounded-lg font-semibold hover:bg-white/10 transition-colors">
-                Schedule a Call
-              </button>
+      <section className="container mx-auto px-6 py-20">
+        <div className="relative rounded-3xl overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-900 via-emerald-800 to-amber-900" />
+          <div className="relative z-10 p-12 md:p-16">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+                  Start Your Export Journey Today
+                </h2>
+                <p className="text-white/90 text-lg mb-8">
+                  Join 5000+ satisfied business clients worldwide. Get customized quotes,
+                  samples, and expert guidance for your export requirements.
+                </p>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3 text-white">
+                    <CheckCircle className="w-5 h-5 text-amber-300" />
+                    <span>Free product samples</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-white">
+                    <CheckCircle className="w-5 h-5 text-amber-300" />
+                    <span>Competitive FOB/CIF prices</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-white">
+                    <CheckCircle className="w-5 h-5 text-amber-300" />
+                    <span>End-to-end export documentation</span>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                <h3 className="text-2xl font-bold text-white mb-6">Request Export Catalog</h3>
+                <div className="space-y-4">
+                  <input
+                    type="email"
+                    placeholder="Your business email"
+                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-amber-300"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Company name"
+                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-amber-300"
+                  />
+                  <select className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-amber-300">
+                    <option value="">Select product interest</option>
+                    <option value="dry-fruits">Dry Fruits</option>
+                    <option value="rice">Rice</option>
+                    <option value="spices">Spices</option>
+                    <option value="all">All Products</option>
+                  </select>
+                  <button className="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg font-bold hover:opacity-90 transition-all">
+                    Download Full Catalog
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* CONTACT INFO */}
-      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl p-6 text-white">
-            <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center mb-4">
-              <Phone className="w-6 h-6" />
+      <section className="container mx-auto px-6 py-16">
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="bg-gradient-to-br from-emerald-600 to-emerald-800 rounded-2xl p-8 text-white">
+            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6">
+              <Phone className="w-8 h-8" />
             </div>
-            <h3 className="font-semibold text-lg mb-2">Export Sales</h3>
-            <div className="text-xl font-bold mb-1">+91 98765 43210</div>
-            <p className="text-emerald-100 text-sm">
-              24/7 dedicated export helpline
-            </p>
+            <h3 className="text-xl font-bold mb-3">Export Sales</h3>
+            <div className="text-2xl font-bold mb-2">+91 98765 43210</div>
+            <p className="opacity-90">24/7 dedicated export helpline</p>
           </div>
 
-          <div className="bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl p-6 text-white">
-            <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center mb-4">
-              <Mail className="w-6 h-6" />
+          <div className="bg-gradient-to-br from-amber-600 to-amber-800 rounded-2xl p-8 text-white">
+            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6">
+              <Mail className="w-8 h-8" />
             </div>
-            <h3 className="font-semibold text-lg mb-2">Email</h3>
-            <div className="text-xl font-bold mb-1">
-              export@dryfruithouse.com
-            </div>
-            <p className="text-amber-100 text-sm">Response within 2 hours</p>
+            <h3 className="text-xl font-bold mb-3">Email</h3>
+            <div className="text-2xl font-bold mb-2">export@dryfruithouse.com</div>
+            <p className="opacity-90">Response within 2 hours</p>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white">
-            <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center mb-4">
-              <MapPin className="w-6 h-6" />
+          <div className="bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl p-8 text-white">
+            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6">
+              <MapPin className="w-8 h-8" />
             </div>
-            <h3 className="font-semibold text-lg mb-2">Head Office</h3>
-            <div className="text-xl font-bold mb-1">Bangalore, India</div>
-            <p className="text-blue-100 text-sm">HSR Layout, Sector 7</p>
+            <h3 className="text-xl font-bold mb-3">Export Office</h3>
+            <div className="text-2xl font-bold mb-2">Bangalore, India</div>
+            <p className="opacity-90">HSR Layout, Sector 7</p>
           </div>
         </div>
       </section>
     </main>
-  );
+  )
 }
